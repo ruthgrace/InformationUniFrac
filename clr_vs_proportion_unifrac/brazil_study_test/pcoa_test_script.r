@@ -18,7 +18,7 @@ source("../../CLRUniFrac.R")
 #this GUniFrac script was ripped straight from the GUniFrac package, with no changes.
 source("../../GUniFrac.R")
 
-source("../../EntropyUniFrac.R")
+source("../../InformationUniFrac.R")
 
 
 # read OTU table and format appropriately for input into UniFrac methods

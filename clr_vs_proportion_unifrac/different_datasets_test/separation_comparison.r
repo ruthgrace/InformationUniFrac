@@ -253,7 +253,7 @@ high.tree <- rootTree(high.tree)
 
 #source("../../CLRUniFrac.R")
 source("../../GUniFrac.R")
-source("../../EntropyUniFrac.R")
+source("../../InformationUniFrac.R")
 #source("../../CLRDirichletUniFrac.R")
 
 #format otu table for input into unifrac methods (rownames are samples, colnames are OTUs)

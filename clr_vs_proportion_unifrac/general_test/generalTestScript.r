@@ -13,7 +13,7 @@ library(phangorn)
 plotParameters <- par()
 
 source("../../GUniFrac.R")
-source("../../EntropyUniFrac.R")
+source("../../InformationUniFrac.R")
 
 # read OTU table and format appropriately for input into UniFrac methods
 otu.tab <- read.table(otuFile, header=T, sep="\t", row.names=1, check.names=FALSE)
