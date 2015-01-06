@@ -33,6 +33,10 @@ Generalized UniFrac script with weighting replaced by a Shannon entropy based we
 #####[GUniFrac.r](GUniFrac.r)
 Generalized UniFrac script ripped straight from the [GUniFrac R package][1]
 
+##Required R Packages
+
+ape: http://cran.r-project.org/web/packages/ape/index.html
+
 ##Notes
 
 A previous attempt at making a weighted UniFrac that was also a proper distance measure used weighting by the centered log ratio transform, which appeared to separate data with high sequencing depth better in some cases. However, there was a confounding correlation with read count when this method was used on data with lower sequencing depth. That code and tests for it can be found at {this GitHub repository)[https://github.com/ruthgrace/CLRUniFrac].
