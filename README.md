@@ -33,8 +33,32 @@ Generalized UniFrac script with weighting replaced by a Shannon entropy based we
 #####[GUniFrac.r](GUniFrac.r)
 Generalized UniFrac script ripped straight from the [GUniFrac R package][1]
 
+##Required R Packages
+
+ape: http://cran.r-project.org/web/packages/ape/index.html
+
+quadprog: http://cran.r-project.org/web/packages/quadprog/index.html
+rgl: http://cran.r-project.org/web/packages/rgl/index.html
+fastmatch: http://cran.r-project.org/web/packages/fastmatch/index.html
+igraph: http://cran.r-project.org/web/packages/igraph/index.html
+phangorn (requires quadprog, rgl, fastmatch, igroup): http://cran.r-project.org/web/packages/phangorn/index.html
+
+vegan: http://cran.r-project.org/web/packages/vegan/index.html
+
+```
+install.packages("ape")
+install.packages("quadprog")
+install.packages("rgl")
+install.packages("fastmatch")
+install.packages("igroup")
+install.packages("phangorn")
+install.packages("vegan")
+```
+
+If you get an error while installing Vegan about tcltk, you can find out more [here](https://github.com/vegandevs/vegan/issues/84). Vegan works with R 3.1.1 and below.
+
 ##Notes
 
-A previous attempt at making a weighted UniFrac that was also a proper distance measure used weighting by the centered log ratio transform, which appeared to separate data with high sequencing depth better in some cases. However, there was a confounding correlation with read count when this method was used on data with lower sequencing depth. That code and tests for it can be found at {this GitHub repository)[https://github.com/ruthgrace/CLRUniFrac].
+A previous attempt at making a weighted UniFrac that was also a proper distance measure used weighting by the centered log ratio transform, which appeared to separate data with high sequencing depth better in some cases. However, there was a confounding correlation with read count when this method was used on data with lower sequencing depth. That code and tests for it can be found at [this GitHub repository](https://github.com/ruthgrace/CLRUniFrac).
 
 [1]: http://cran.r-project.org/web/packages/GUniFrac/index.html
