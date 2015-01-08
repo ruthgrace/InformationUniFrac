@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# consider testing with different rarification methods later ?
+#TEST THIS SCRIPT TO MAKE SURE IT WORKS particularly doing mixed otus
 
 options(error=recover)
 
@@ -76,6 +76,12 @@ runMixedReplicate <- function(otu1,otu2,groups1,groups2,tree,nSamples) {
 	group2.indices <- which(groups2==levels(groups2)[2])
 	group2.rand <- otu2[as.integer(sample(group2.indices,nSamples,replace=FALSE)),]
 	
+	if (ncol(group1.rand)!=ncol(group2.rand)) {
+		mixedOTUs <- addDisimilarOTUs(group1.rand,group2.rand,tree)
+		group1.rand <- mixedOTUs[[1]]
+		gropu2.rand <- mixedOTUs[[2]]
+	}
+
 	#concatenate
 	data <- rbind(group1.rand,group2.rand)
 
@@ -530,27 +536,27 @@ compare(runMixedReplicate, depth, depth.groups, mixedComparisonList3, depth.diff
 
 # # SPARSITY TEST
 
-# #remove OTUs rarer than a thresh hold throughout all samples
-# high.otu.sum <- apply(high.otu,2,sum)
-# high.total.sum <- sum(high.otu)
+#remove OTUs rarer than a thresh hold throughout all samples
+high.otu.sum <- apply(high.otu,2,sum)
+high.total.sum <- sum(high.otu)
 
-# sparse <- list()
+sparse <- list()
 
-# sparse$otu.001 <- high.otu[,(which(high.otu.sum >= (0.001*high.total.sum)))]
-# sparse$otu.0001 <- high.otu[,(which(high.otu.sum >= (0.0001*high.total.sum)))]
-# sparse$otu.00001 <- high.otu[,(which(high.otu.sum >= (0.00001*high.total.sum)))]
+sparse$otu.001 <- high.otu[,(which(high.otu.sum >= (0.001*high.total.sum)))]
+sparse$otu.0001 <- high.otu[,(which(high.otu.sum >= (0.0001*high.total.sum)))]
+sparse$otu.00001 <- high.otu[,(which(high.otu.sum >= (0.00001*high.total.sum)))]
 
-# sparse.groups <- list()
-# sparse.groups[[1]] <- sparse.groups[[2]] <- sparse.groups[[3]] <- high.groups
+sparse.groups <- list()
+sparse.groups[[1]] <- sparse.groups[[2]] <- sparse.groups[[3]] <- high.groups
 
-# sparse.tree <- list()
-# sparse.tree[[1]] <- sparse.tree[[2]] <- sparse.tree[[3]] <- high.tree
+sparse.tree <- list()
+sparse.tree[[1]] <- sparse.tree[[2]] <- sparse.tree[[3]] <- high.tree
 
-# comparisonTitleList <- c("Sparsity filter at 0.1%","Sparsity filter at 0.01%","Sparsity filter at 0.001%")
-# fileName <- "sparsityTestPlots.pdf"
-# nSamples <- 50
+comparisonTitleList <- c("Sparsity filter at 0.1%","Sparsity filter at 0.01%","Sparsity filter at 0.001%")
+fileName <- "sparsityTestPlots.pdf"
+nSamples <- 50
 
-# compare(runReplicate, sparse, sparse.groups, selfComparisonList3, sparse.tree, comparisonTitleList, fileName, nSamples)
+compare(runReplicate, sparse, sparse.groups, selfComparisonList3, sparse.tree, comparisonTitleList, fileName, nSamples)
 
 
 # #0.1% sparsity filter
