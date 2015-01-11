@@ -2,6 +2,8 @@
 # output tables for low, medium, and high sequencing depth
 #samples may overlap between tables (want extra samples per group to perform replicates)
 
+#take sample from human microbiome project, healthy stool
+
 # table comes out with samples in columns and OTUs in rows
 
 options(error=recover)
