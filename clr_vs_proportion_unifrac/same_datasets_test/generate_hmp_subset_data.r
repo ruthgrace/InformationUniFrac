@@ -43,6 +43,38 @@ writeFile <- function(saliva,stool,tree,filename,condition1,condition2,otuIDs) {
 }
 
 
+writeFileForOneBodySite <- function(siteName,tree,filename,condition,otuIDs) {
+	#concatenate	
+	data <- data.frame(siteName)
+	colnames(data) <- sub("^X", "", colnames(data))
+	rownames(data) <- otuIDs
+
+	#make condition vector
+	groups <- as.factor(rep(condition,ncol(siteName)))
+
+	#get rid of zero sum rows
+	data.sum <- apply(data,1,sum)
+	data.0 <- data[data.sum > 0,]
+	data <- data.0
+
+	# get rid of extra OTUs in tree
+	tree$tip.label <- gsub("'","",tree$tip.label)
+	absent <- tree$tip.label[!(tree$tip.label %in% rownames(data))]
+	if (length(absent) != 0) {
+			tree <- drop.tip(tree, absent)
+	}
+	write.tree(tree,file=paste(filename,"subtree.tre",sep="_"))
+
+	#make sample names that contain condition
+
+	colnames(data) <- paste(groups,colnames(data),sep="_")
+
+	#write otu counts into table
+	write.table(data,file=paste(condition,filename,"hmp_data.txt",sep="_"),sep="\t",quote=FALSE)
+	# read in with read.table("hmp_mouth_data.txt",sep="\t",header=TRUE,row.names=1)	
+}
+
+
 
 hmpData <- "../../../../fodor/otu_table_psn_v35.txt"
 hmpMetadata <- "../../../../fodor/v35_map_uniquebyPSN.txt"
@@ -90,9 +122,18 @@ stool.med <- stool.otu[,which((stool>3000) & (stool.sum < 6000))]
 saliva.high <- saliva.otu[,which(saliva.sum>6000)]
 stool.high <- stool.otu[,which(stool.sum>6000)]
 
-writeFile(saliva.low,stool.low,tree,"low_sequencing_depth",saliva,stool,otuIDs)
-writeFile(saliva.med,stool.med,tree,"med_sequencing_depth",saliva,stool,otuIDs)
-writeFile(saliva.high,stool.high,tree,"high_sequencing_depth",saliva,stool,otuIDs)
+writeFileForOneBodySite(saliva.low,tree,"low_sequencing_depth","Saliva",otuIDs)
+writeFileForOneBodySite(saliva.med,tree,"med_sequencing_depth","Saliva",otuIDs)
+writeFileForOneBodySite(saliva.high,tree,"high_sequencing_depth","Saliva",otuIDs)
+
+writeFileForOneBodySite(stool.low,tree,"low_sequencing_depth","Stool",otuIDs)
+writeFileForOneBodySite(stool.med,tree,"med_sequencing_depth","Stool",otuIDs)
+writeFileForOneBodySite(stool.high,tree,"high_sequencing_depth","Stool",otuIDs)
+
+
+# writeFile(saliva.low,stool.low,tree,"low_sequencing_depth",saliva,stool,otuIDs)
+# writeFile(saliva.med,stool.med,tree,"med_sequencing_depth",saliva,stool,otuIDs)
+# writeFile(saliva.high,stool.high,tree,"high_sequencing_depth",saliva,stool,otuIDs)
 
 #examine diversity
 saliva.low.div <- diversity(saliva.low)
@@ -117,5 +158,6 @@ summary(stool.high.div)
 # akg.rand <- akg.otu[,as.integer(sample(seq(1,length(colnames(akg.otu)),1),20,replace=FALSE))]
 # hp.rand <- hp.otu[,as.integer(sample(seq(1,length(colnames(hp.otu)),1),20,replace=FALSE))]
 # s.rand <- s.otu[,as.integer(sample(seq(1,length(colnames(s.otu)),1),20,replace=FALSE))]
+
 
 
