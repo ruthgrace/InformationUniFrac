@@ -1,9 +1,11 @@
+options(error=recover)
+
 #GETTING THE DATA FROM Human Microbiome Project OTU table
 library(phangorn)
 
 hmpData <- "../../../../fodor/otu_table_psn_v35.txt"
 hmpMetadata <- "../../../../fodor/v35_map_uniquebyPSN.txt"
-treeFile <- "../../../../fodor/rep_set_v35.tre")
+treeFile <- "../../../../fodor/rep_set_v35.tre"
 
 id <- read.table(hmpMetadata, header=TRUE, sep="\t", row.names=1)
 otu <- t( read.table(hmpData, header=T, sep="\t", row.names=1, check.names=FALSE) )
@@ -62,13 +64,15 @@ akg.otu <- akg.otu[,which(akg.sum>10000)]
 hp.otu <- hp.otu[,which(hp.sum>10000)]
 s.otu <- s.otu[,which(s.sum>10000)]
 
-#pick 20 random samples from each category
+#pick random samples from each category
 
-bm.rand <- bm.otu[,as.integer(sample(seq(1,length(colnames(bm.otu)),1),20,replace=FALSE))]
-td.rand <- td.otu[,as.integer(sample(seq(1,length(colnames(td.otu)),1),20,replace=FALSE))]
-akg.rand <- akg.otu[,as.integer(sample(seq(1,length(colnames(akg.otu)),1),20,replace=FALSE))]
-hp.rand <- hp.otu[,as.integer(sample(seq(1,length(colnames(hp.otu)),1),20,replace=FALSE))]
-s.rand <- s.otu[,as.integer(sample(seq(1,length(colnames(s.otu)),1),20,replace=FALSE))]
+nSamples <- 20
+
+bm.rand <- bm.otu[,as.integer(sample(seq(1,length(colnames(bm.otu)),1),nSamples,replace=FALSE))]
+td.rand <- td.otu[,as.integer(sample(seq(1,length(colnames(td.otu)),1),nSamples,replace=FALSE))]
+akg.rand <- akg.otu[,as.integer(sample(seq(1,length(colnames(akg.otu)),1),nSamples,replace=FALSE))]
+hp.rand <- hp.otu[,as.integer(sample(seq(1,length(colnames(hp.otu)),1),nSamples,replace=FALSE))]
+s.rand <- s.otu[,as.integer(sample(seq(1,length(colnames(s.otu)),1),nSamples,replace=FALSE))]
 
 #concatenate
 
@@ -77,7 +81,7 @@ colnames(data) <- sub("^X", "", colnames(data))
 rownames(data) <- otuIDs
 #make condition vector
 
-groups <- as.factor(c(rep("bm",20),rep("td",20),rep("akg",20),rep("hp",20),rep("s",20)))
+groups <- as.factor(c(rep("bm",nSamples),rep("td",nSamples),rep("akg",nSamples),rep("hp",nSamples),rep("s",nSamples)))
 
 #get rid of zero sum rows
 
@@ -87,11 +91,11 @@ data <- data.0
 
 # get rid of extra OTUs in tree
 tree$tip.label <- gsub("'","",tree$tip.label)
-absent <- tree$tip.label[!(tree$tip.label %in% colnames(data))]
+absent <- tree$tip.label[!(tree$tip.label %in% rownames(data))]
 if (length(absent) != 0) {
 		tree <- drop.tip(tree, absent)
 }
-write.tree(tree,file="rep_set_v35_subtree.tre")
+write.tree(tree,file="hmp_mouth_subtree.tre")
 
 #make sample names that contain condition
 

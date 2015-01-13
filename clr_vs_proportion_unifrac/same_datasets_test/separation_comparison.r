@@ -50,6 +50,9 @@ removeTreeTipLabelSingleQuotes <- function(tree) {
 
 runReplicate <- function(otu,groups,tree,nSamples) {
 	
+	if (!is.factor(groups)) {
+		groups <- as.factor(groups)
+	}
 	
 	#sample 50 samples from condition 1
 	group1.indices <- which(groups==levels(groups)[1])
@@ -67,7 +70,13 @@ runReplicate <- function(otu,groups,tree,nSamples) {
 	return(getAllPcoaMetrics(data,newGroups,tree))
 }
 
-runMixedReplicate <- function(otu1,otu2,groups1,groups2,tree,nSamples) {	
+runMixedReplicate <- function(otu1,otu2,groups1,groups2,tree,nSamples) {
+	if (!is.factor(groups1)) {
+		groups1 <- as.factor(groups1)
+	}
+	if (!is.factor(groups2)) {
+		groups2 <- as.factor(groups2)
+	}
 	#sample 50 samples from condition 1,group1
 	group1.indices <- which(groups1==levels(groups1)[1])
 	group1.rand <- otu1[as.integer(sample(group1.indices,nSamples,replace=FALSE)),]
@@ -131,8 +140,8 @@ addDisimilarOTUs <- function(otu1,otu2,tree) {
 }
 
 compare <- function(replicateMethod, otuList, groupList, comparisonList, treeList, comparisonTitleList, fileName, nSamples) {
-	pdf(fileName)
 	print(paste("length of comparisonList",length(comparisonList)))
+	pdf(fileName)
 	for (i in 1:length(comparisonList)) {
 		print(paste("comparison list",i))
 		print(comparisonList[[i]])
@@ -230,215 +239,268 @@ getReplicate <- function(replicateMethod,otu1,group1,tree,plotTitle,nSamples,gro
 	return(reps)
 }
 
-#all CLR DIRICHLET commented out while the method is being fixed.
-#attempt at sparsity filter instead -- 30 counts minimum is what is stable
 
 
-low.data <- read.table("low_sequencing_depth_hmp_data.txt",sep="\t",header=TRUE,row.names=1)
-med.data <- read.table("med_sequencing_depth_hmp_data.txt",sep="\t",header=TRUE,row.names=1)
-high.data <- read.table("high_sequencing_depth_hmp_data.txt",sep="\t",header=TRUE,row.names=1)
+#analysis method
+#	nSamples is number of samples for each condition (out of two randomized conditions) for each of low/med/high sequencing depth
+analyze <- function(nSamples, conditionName,lowDiversityCutoff,highDiversityCutoff,nDiversitySamples) {
+	#define strings for reading in appropriate file names
 
-#get metadata (stool vs saliva)
-low.groups <- as.factor(gsub("_.*", "", colnames(low.data)))
-med.groups <- as.factor(gsub("_.*", "", colnames(med.data)))
-high.groups <- as.factor(gsub("_.*", "", colnames(high.data)))
+	low <- "low"
+	med <- "med"
+	high <- "high"
 
-low.tree <- read.tree("./low_sequencing_depth_subtree.tre")
-med.tree <- read.tree("./med_sequencing_depth_subtree.tre")
-high.tree <- read.tree("./high_sequencing_depth_subtree.tre")
 
-#get rid of extra quotes on OTU labels
-low.tree <- removeTreeTipLabelSingleQuotes(low.tree)
-med.tree <- removeTreeTipLabelSingleQuotes(med.tree)
-high.tree <- removeTreeTipLabelSingleQuotes(high.tree)
+	#read in data
 
-#root tree by midpoint if not rooted
-low.tree <- rootTree(low.tree)
-med.tree <- rootTree(med.tree)
-high.tree <- rootTree(high.tree)
+	low.data <- read.table(paste(conditionName,low,"sequencing_depth_hmp_data.txt",sep="_"),sep="\t",header=TRUE,row.names=1)
+	med.data <- read.table(paste(conditionName,med,"sequencing_depth_hmp_data.txt",sep="_"),sep="\t",header=TRUE,row.names=1)
+	high.data <- read.table(paste(conditionName,high,"sequencing_depth_hmp_data.txt",sep="_"),sep="\t",header=TRUE,row.names=1)
 
-#source("../../CLRUniFrac.R")
-source("../../GUniFrac.R")
-source("../../InformationUniFrac.R")
-#source("../../CLRDirichletUniFrac.R")
 
-#format otu table for input into unifrac methods (rownames are samples, colnames are OTUs)
-low.data.t <- t(low.data)
-med.data.t <- t(med.data)
-high.data.t <- t(high.data)
+	#make random groups for analysis
 
-#get rid of any OTUs that aren't in the tree (only a couple reads discarded in total)
-low.otu.unordered <- low.data.t[,which(colnames(low.data.t) %in% low.tree$tip.label)]
-med.otu.unordered <- med.data.t[,which(colnames(med.data.t) %in% med.tree$tip.label)]
-high.otu.unordered <- high.data.t[,which(colnames(high.data.t) %in% high.tree$tip.label)]
+	low.groups <- c(rep(1,nSamples),rep(2,nSamples))
+	med.groups <- c(rep(1,nSamples),rep(2,nSamples))
+	high.groups <- c(rep(1,nSamples),rep(2,nSamples))
+	#randomize
+	low.groups <- sample(low.groups,nSamples*2,replace=FALSE)
+	med.groups <- sample(med.groups,nSamples*2,replace=FALSE)
+	high.groups <- sample(high.groups,nSamples*2,replace=FALSE)
 
-#order otus by abundance (least to most)
-taxaOrder <- rev(order(apply(low.otu.unordered,2,sum)))
-low.otu <- low.otu.unordered[,taxaOrder]
-taxaOrder <- rev(order(apply(med.otu.unordered,2,sum)))
-med.otu <- med.otu.unordered[,taxaOrder]
-taxaOrder <- rev(order(apply(high.otu.unordered,2,sum)))
-high.otu <- high.otu.unordered[,taxaOrder]
 
+	#read in phylogenetic tree
 
+	low.tree <- read.tree(paste("./",conditionName,"_",low,"_sequencing_depth_subtree.tre",sep=""))
+	med.tree <- read.tree(paste("./",conditionName,"_",med,"_sequencing_depth_subtree.tre",sep=""))
+	high.tree <- read.tree(paste("./",conditionName,"_",high,"_sequencing_depth_subtree.tre",sep=""))
+	#get rid of extra quotes on OTU labels
+	low.tree <- removeTreeTipLabelSingleQuotes(low.tree)
+	med.tree <- removeTreeTipLabelSingleQuotes(med.tree)
+	high.tree <- removeTreeTipLabelSingleQuotes(high.tree)
+	#root tree by midpoint if not rooted
+	low.tree <- rootTree(low.tree)
+	med.tree <- rootTree(med.tree)
+	high.tree <- rootTree(high.tree)
 
-selfComparisonList3 <- list()
-selfComparisonList3[[1]] <- c(1)
-selfComparisonList3[[2]] <- c(2)
-selfComparisonList3[[3]] <- c(3)
 
-mixedComparisonList3 <- list()
-mixedComparisonList3[[1]] <- c(1,2)
-mixedComparisonList3[[2]] <- c(1,3)
-mixedComparisonList3[[3]] <- c(2,3)
+	#get UniFrac calculation methods
+	#	GUnifrac has weighted and unweighted methods
+	#	InformationUniFrac has entropy weighted UniFrac method
+	source("../../GUniFrac.R")
+	source("../../InformationUniFrac.R")
 
-selfComparisonList2 <- list()
-selfComparisonList2[[1]] <- c(1)
-selfComparisonList2[[2]] <- c(2)
 
-mixedComparisonList2 <- list()
-mixedComparisonList2[[1]] <- c(1,2)
-mixedComparisonList2[[2]] <- c(2,1)
+	#format otu table for input into unifrac methods (rownames are samples, colnames are OTUs)
+	low.data.t <- t(low.data)
+	med.data.t <- t(med.data)
+	high.data.t <- t(high.data)
 
-# sparsityLabels <- c(rep("sparsity.001",3),rep("sparsity.0001",3),rep("sparsity.00001",3))
-# plotSparsityDataColNames <- paste(sparsityLabels, unifracLabels, sep = ".")
+	#get rid of any OTUs that aren't in the tree (only a couple reads discarded in total)
+	low.otu.unordered <- low.data.t[,which(colnames(low.data.t) %in% low.tree$tip.label)]
+	med.otu.unordered <- med.data.t[,which(colnames(med.data.t) %in% med.tree$tip.label)]
+	high.otu.unordered <- high.data.t[,which(colnames(high.data.t) %in% high.tree$tip.label)]
 
-# diversityLabels <- c(rep("low.diversity",3),rep("high.diversity",3))
-# shortUnifracLabels <- rep(c("uwUnifrac","wUnifrac","iUnifrac"),2)
-# plotDiversityDataColNames <- paste(diversityLabels, shortUnifracLabels, sep = ".")
+	#order otus by abundance (least to most)
+	taxaOrder <- rev(order(apply(low.otu.unordered,2,sum)))
+	low.otu <- low.otu.unordered[,taxaOrder]
+	taxaOrder <- rev(order(apply(med.otu.unordered,2,sum)))
+	med.otu <- med.otu.unordered[,taxaOrder]
+	taxaOrder <- rev(order(apply(high.otu.unordered,2,sum)))
+	high.otu <- high.otu.unordered[,taxaOrder]
 
 
-# SEQUENCING DEPTH TEST
+	#set up default sets of comparisons (self comparisions and pairwise comparisions of 2 and 3 conditions)
+	selfComparisonList3 <- list()
+	selfComparisonList3[[1]] <- c(1)
+	selfComparisonList3[[2]] <- c(2)
+	selfComparisonList3[[3]] <- c(3)
 
-depth <- list()
+	mixedComparisonList3 <- list()
+	mixedComparisonList3[[1]] <- c(1,2)
+	mixedComparisonList3[[2]] <- c(1,3)
+	mixedComparisonList3[[3]] <- c(2,3)
 
-depth$low <- low.otu
-depth$med <- med.otu
-depth$high <- high.otu
+	selfComparisonList2 <- list()
+	selfComparisonList2[[1]] <- c(1)
+	selfComparisonList2[[2]] <- c(2)
 
-depth.groups <- list()
-depth.groups$low <- low.groups
-depth.groups$med <- med.groups
-depth.groups$high <- high.groups
+	mixedComparisonList2 <- list()
+	mixedComparisonList2[[1]] <- c(1,2)
+	mixedComparisonList2[[2]] <- c(2,1)
 
-depth.tree <- list()
-depth.tree$low <- low.tree
-depth.tree$med <- med.tree
-depth.tree$high <- high.tree
 
-comparisonTitleList <- c("Sequencing depth < 3000 reads/sample","Sequencing depth 3000-6000 reads/sample","Sequencing depth > 6000 reads/sample")
-fileName <- "sequencingDepthPlots.pdf"
-nSamples <- 50
+	# sparsityLabels <- c(rep("sparsity.001",3),rep("sparsity.0001",3),rep("sparsity.00001",3))
+	# plotSparsityDataColNames <- paste(sparsityLabels, unifracLabels, sep = ".")
 
-compare(runReplicate, depth, depth.groups, selfComparisonList3, depth.tree, comparisonTitleList, fileName, nSamples)
+	# diversityLabels <- c(rep("low.diversity",3),rep("high.diversity",3))
+	# shortUnifracLabels <- rep(c("uwUnifrac","wUnifrac","iUnifrac"),2)
+	# plotDiversityDataColNames <- paste(diversityLabels, shortUnifracLabels, sep = ".")
 
 
-# SEQUENCING DEPTH DIFFERENCE TEST
+	# SEQUENCING DEPTH TEST
 
-depth.diff.tree <- list()
-depth.diff.tree[[1]] <- high.tree
-depth.diff.tree[[2]] <- high.tree
-depth.diff.tree[[3]] <- high.tree
+	depth <- list()
 
-comparisonTitleList <- c("Sequencing depth < 3000 vs. 3000-6000 reads/sample","Sequencing depth 3000-6000 vs. > 6000 reads/sample","Sequencing depth 3000-6000 vs. > 6000 reads/sample")
-fileName <- "sequencingDepthDifferenceTestPlots.pdf"
-nSamples <- 50
+	depth$low <- low.otu
+	depth$med <- med.otu
+	depth$high <- high.otu
 
-compare(runMixedReplicate, depth, depth.groups, mixedComparisonList3, depth.diff.tree, comparisonTitleList, fileName, nSamples)
+	depth.groups <- list()
+	depth.groups$low <- low.groups
+	depth.groups$med <- med.groups
+	depth.groups$high <- high.groups
 
+	depth.tree <- list()
+	depth.tree$low <- low.tree
+	depth.tree$med <- med.tree
+	depth.tree$high <- high.tree
 
+	comparisonTitleList <- paste(conditionName, c("Sequencing depth < 3000 reads/sample","Sequencing depth 3000-6000 reads/sample","Sequencing depth > 6000 reads/sample"))
+	fileName <- paste(conditionName,"sequencingDepthPlots.pdf",sep="_")
 
-# # SPARSITY TEST
+	compare(runReplicate, depth, depth.groups, selfComparisonList3, depth.tree, comparisonTitleList, fileName, nSamples)
 
-#remove OTUs rarer than a thresh hold throughout all samples
-high.otu.sum <- apply(high.otu,2,sum)
-high.total.sum <- sum(high.otu)
 
-sparse <- list()
+	# SEQUENCING DEPTH DIFFERENCE TEST
 
-sparse$otu.001 <- high.otu[,(which(high.otu.sum >= (0.001*high.total.sum)))]
-sparse$otu.0001 <- high.otu[,(which(high.otu.sum >= (0.0001*high.total.sum)))]
-sparse$otu.00001 <- high.otu[,(which(high.otu.sum >= (0.00001*high.total.sum)))]
+	depth.diff.tree <- list()
+	depth.diff.tree[[1]] <- high.tree
+	depth.diff.tree[[2]] <- high.tree
+	depth.diff.tree[[3]] <- high.tree
 
-sparse.groups <- list()
-sparse.groups[[1]] <- sparse.groups[[2]] <- sparse.groups[[3]] <- high.groups
+	comparisonTitleList <- paste(conditionName, c("Sequencing depth < 3000 vs. 3000-6000 reads/sample","Sequencing depth 3000-6000 vs. > 6000 reads/sample","Sequencing depth 3000-6000 vs. > 6000 reads/sample"))
+	fileName <- paste(conditionName,"sequencingDepthDifferenceTestPlots.pdf",sep="_")
 
-sparse.tree <- list()
-sparse.tree[[1]] <- sparse.tree[[2]] <- sparse.tree[[3]] <- high.tree
+	compare(runMixedReplicate, depth, depth.groups, mixedComparisonList3, depth.diff.tree, comparisonTitleList, fileName, nSamples)
 
-comparisonTitleList <- c("Sparsity filter at 0.1%","Sparsity filter at 0.01%","Sparsity filter at 0.001%")
-fileName <- "sparsityTestPlots.pdf"
-nSamples <- 50
 
-compare(runReplicate, sparse, sparse.groups, selfComparisonList3, sparse.tree, comparisonTitleList, fileName, nSamples)
 
+	# # SPARSITY TEST
 
+	#remove OTUs rarer than a thresh hold throughout all samples
+	high.otu.sum <- apply(high.otu,2,sum)
+	high.total.sum <- sum(high.otu)
 
-# SPARSITY DIFFERENCE TEST
+	sparse <- list()
 
-sparse.diff <- list()
+	sparse$otu.001 <- high.otu[,(which(high.otu.sum >= (0.001*high.total.sum)))]
+	sparse$otu.0001 <- high.otu[,(which(high.otu.sum >= (0.0001*high.total.sum)))]
+	sparse$otu.00001 <- high.otu[,(which(high.otu.sum >= (0.00001*high.total.sum)))]
 
-sparse.diff$otu.001 <- high.otu
-sparse.diff$otu.001[,(which(high.otu.sum < (0.001*high.total.sum)))] <- 0
-sparse.diff$otu.0001 <- high.otu
-sparse.diff$otu.0001[,(which(high.otu.sum < (0.0001*high.total.sum)))] <- 0
-sparse.diff$otu.00001 <- high.otu
-sparse.diff$otu.00001[,(which(high.otu.sum < (0.00001*high.total.sum)))] <- 0
+	sparse.groups <- list()
+	sparse.groups[[1]] <- sparse.groups[[2]] <- sparse.groups[[3]] <- high.groups
 
+	sparse.tree <- list()
+	sparse.tree[[1]] <- sparse.tree[[2]] <- sparse.tree[[3]] <- high.tree
 
-sparse.diff.groups <- list()
-sparse.diff.groups[[1]] <- sparse.diff.groups[[2]] <- sparse.diff.groups[[3]] <- high.groups
+	comparisonTitleList <- paste(conditionName, c("Sparsity filter at 0.1%","Sparsity filter at 0.01%","Sparsity filter at 0.001%"))
+	fileName <- paste(conditionName,"sparsityTestPlots.pdf",sep="_")
 
-sparse.diff.tree <- list()
-sparse.diff.tree[[1]] <- sparse.diff.tree[[2]] <- sparse.diff.tree[[3]] <- high.tree
+	compare(runReplicate, sparse, sparse.groups, selfComparisonList3, sparse.tree, comparisonTitleList, fileName, nSamples)
 
-comparisonTitleList <- c("Sparsity filter at 0.1% vs 0.01%","Sparsity filter at 0.1% vs 0.001%","Sparsity filter at 0.01% vs 0.001%")
-fileName <- "sparsityDifferenceTestPlots.pdf"
-nSamples <- 50
 
-compare(runMixedReplicate, sparse.diff, sparse.diff.groups, mixedComparisonList3, sparse.diff.tree, comparisonTitleList, fileName, nSamples)
 
+	# SPARSITY DIFFERENCE TEST
 
+	sparse.diff <- list()
 
-# SHANNON DIVERSITY TEST
+	sparse.diff$otu.001 <- high.otu
+	sparse.diff$otu.001[,(which(high.otu.sum < (0.001*high.total.sum)))] <- 0
+	sparse.diff$otu.0001 <- high.otu
+	sparse.diff$otu.0001[,(which(high.otu.sum < (0.0001*high.total.sum)))] <- 0
+	sparse.diff$otu.00001 <- high.otu
+	sparse.diff$otu.00001[,(which(high.otu.sum < (0.00001*high.total.sum)))] <- 0
 
-#note that average diversity isn't the same in the different conditions
-#	medians are 6.216 for saliva, 5.624 for stool
-high.otu.diversity <- diversity(high.otu)
 
-#low/high diversity cutoffs set so that there are at least 10 samples in each condition
-#	less samples -> extra replicates
-high.diversity.indices <- which(high.otu.diversity > 6)
-low.diversity.indices <- which(high.otu.diversity < 5.7)
-high.diversity <- high.otu[high.diversity.indices,]
-low.diversity <- high.otu[low.diversity.indices,]
-high.diversity.groups <- high.groups[high.diversity.indices]
-low.diversity.groups <- high.groups[low.diversity.indices]
+	sparse.diff.groups <- list()
+	sparse.diff.groups[[1]] <- sparse.diff.groups[[2]] <- sparse.diff.groups[[3]] <- high.groups
 
+	sparse.diff.tree <- list()
+	sparse.diff.tree[[1]] <- sparse.diff.tree[[2]] <- sparse.diff.tree[[3]] <- high.tree
 
-diversity <- list()
+	comparisonTitleList <- paste(conditionName,c("Sparsity filter at 0.1% vs 0.01%","Sparsity filter at 0.1% vs 0.001%","Sparsity filter at 0.01% vs 0.001%"))
+	fileName <- paste(conditionName,"sparsityDifferenceTestPlots.pdf",sep="_")
 
-diversity$low <- low.diversity
-diversity$high <- high.diversity
+	compare(runMixedReplicate, sparse.diff, sparse.diff.groups, mixedComparisonList3, sparse.diff.tree, comparisonTitleList, fileName, nSamples)
 
-diversity.groups <- list()
-diversity.groups$low <- low.diversity.groups
-diversity.groups$high <- high.diversity.groups
 
-diversity.tree <- list()
-diversity.tree[[1]] <- diversity.tree[[2]] <- high.tree
 
-comparisonTitleList <- c("Shannon diversity < 5.7","Shannon diversity > 6")
-fileName <- "diversityTestPlots.pdf"
-nSamples <- 10
+	# SHANNON DIVERSITY TEST
 
-compare(runReplicate, diversity, diversity.groups, selfComparisonList2, diversity.tree, comparisonTitleList, fileName, nSamples)
+	#note that average diversity isn't the same in the different conditions
+	#	medians are 6.216 for saliva, 5.624 for stool
+	high.otu.diversity <- diversity(high.otu)
 
+	#low/high diversity cutoffs set so that there are at least 10 samples in each condition
+	#	less samples -> extra replicates
+	high.diversity.indices <- which(high.otu.diversity > highDiversityCutoff)
+	low.diversity.indices <- which(high.otu.diversity < lowDiversityCutoff)
+	high.diversity <- high.otu[high.diversity.indices,]
+	low.diversity <- high.otu[low.diversity.indices,]
+	high.diversity.groups <- high.groups[high.diversity.indices]
+	low.diversity.groups <- high.groups[low.diversity.indices]
 
-# SHANNON DIVERSITY DIFFERENCE TEST
 
-comparisonTitleList <- c("Saliva diversity < 5.7 vs. stool diversity > 6.1","Stool diversity < 5.7 vs. saliva diversity > 6.1")
-fileName <- "diversityDifferenceTestPlots.pdf"
-nSamples <- 10
+	diversity <- list()
 
-compare(runMixedReplicate, diversity, diversity.groups, mixedComparisonList2, diversity.tree, comparisonTitleList, fileName, nSamples)
+	diversity$low <- low.diversity
+	diversity$high <- high.diversity
+
+	diversity.groups <- list()
+	diversity.groups$low <- low.diversity.groups
+	diversity.groups$high <- high.diversity.groups
+
+	diversity.tree <- list()
+	diversity.tree[[1]] <- diversity.tree[[2]] <- high.tree
+
+	comparisonTitleList <- paste(conditionName, c(paste("Shannon diversity <",lowDiversityCutoff),paste("Shannon diversity >",highDiversityCutoff)))
+	fileName <- paste(conditionName,"diversityTestPlots.pdf",sep="_")
+
+	compare(runReplicate, diversity, diversity.groups, selfComparisonList2, diversity.tree, comparisonTitleList, fileName, nDiversitySamples)
+
+
+	# SHANNON DIVERSITY DIFFERENCE TEST
+
+	comparisonTitleList <- paste(conditionName, c(paste("Shannon diversity <",lowDiversityCutoff,"vs. diversity >",highDiversityCutoff),paste("Shannon diversity <",lowDiversityCutoff,"vs. saliva diversity >",highDiversityCutoff)))
+	fileName <- paste(conditionName,"diversityDifferenceTestPlots.pdf",sep="_")
+
+	compare(runMixedReplicate, diversity, diversity.groups, mixedComparisonList2, diversity.tree, comparisonTitleList, fileName, nDiversitySamples)
+
+}
+
+
+
+
+nSamples <- 30
+nDiversitySamples <- 10
+lowDiversityCutoff <- 5.7
+highDiversityCutoff <- 6
+
+#saliva
+analyze(nSamples,"Saliva",lowDiversityCutoff,highDiversityCutoff,nDiversitySamples)
+
+#stool
+analyze(nSamples,"Stool",lowDiversityCutoff,highDiversityCutoff,nDiversitySamples)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -63,7 +63,7 @@ writeFileForOneBodySite <- function(siteName,tree,filename,condition,otuIDs) {
 	if (length(absent) != 0) {
 			tree <- drop.tip(tree, absent)
 	}
-	write.tree(tree,file=paste(filename,"subtree.tre",sep="_"))
+	write.tree(tree,file=paste(condition,filename,"subtree.tre",sep="_"))
 
 	#make sample names that contain condition
 
@@ -135,22 +135,22 @@ writeFileForOneBodySite(stool.high,tree,"high_sequencing_depth","Stool",otuIDs)
 # writeFile(saliva.med,stool.med,tree,"med_sequencing_depth",saliva,stool,otuIDs)
 # writeFile(saliva.high,stool.high,tree,"high_sequencing_depth",saliva,stool,otuIDs)
 
-#examine diversity
-saliva.low.div <- diversity(saliva.low)
-stool.low.div <- diversity(stool.low)
+# #examine diversity
+# saliva.low.div <- diversity(saliva.low)
+# stool.low.div <- diversity(stool.low)
 
-saliva.med.div <- diversity(saliva.med)
-stool.med.div <- diversity(stool.med)
+# saliva.med.div <- diversity(saliva.med)
+# stool.med.div <- diversity(stool.med)
 
-saliva.high.div <- diversity(saliva.high)
-stool.high.div <- diversity(stool.high)
+# saliva.high.div <- diversity(saliva.high)
+# stool.high.div <- diversity(stool.high)
 
-summary(saliva.low.div)
-summary(stool.low.div)
-summary(saliva.med.div)
-summary(stool.med.div)
-summary(saliva.high.div)
-summary(stool.high.div)
+# summary(saliva.low.div)
+# summary(stool.low.div)
+# summary(saliva.med.div)
+# summary(stool.med.div)
+# summary(saliva.high.div)
+# summary(stool.high.div)
 # #pick 20 random samples from each category
 
 # bm.rand <- bm.otu[,as.integer(sample(seq(1,length(colnames(bm.otu)),1),20,replace=FALSE))]
