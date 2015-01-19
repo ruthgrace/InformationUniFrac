@@ -1,2 +1,8 @@
-Error in library(phangorn) : there is no package called ‘phangorn’
+Loading required package: ape
+Warning messages:
+1: In rgl.init(initValue, onlyNULL) : RGL: unable to open X11 display
+2: In fun(libname, pkgname) : error in rgl_init
+Error in solve.default(cv) : 
+  Lapack routine dgesv: system is exactly singular: U[12921,12921] = 0
+Calls: factanal -> diag -> solve -> solve.default
 Execution halted
