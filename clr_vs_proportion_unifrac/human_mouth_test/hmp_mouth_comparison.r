@@ -282,3 +282,13 @@ palette(originalPalette)
 dev.off()
 
 
+#factor analysis of entropy weights
+
+
+otuSum <- apply(mouth.otu,1,sum)
+otuProp <- apply(mouth.otu,2,function(x) x/otuSum)
+otuEntropy <- apply(otuProp,1:2,function(x) - x*log2(x))
+
+
+
+
