@@ -241,6 +241,141 @@ getAllPcoaMetrics <- function(otu,groups,tree) {
 	return(returnList)
 }
 
+
+kmeansClustering <- function(otu,groups,tree,filename,uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa) {
+	# pdf(paste(filename,".pdf",sep=""))
+
+
+	# #Generate UniFrac distance matrices
+	# unifrac <- GUniFrac(otu, tree, alpha = c(1))
+	# uwUnifrac <- unifrac$unifrac[,,1]
+	# wUnifrac <- unifrac$unifrac[,,3]
+	# eUnifrac <- InformationUniFrac(otu, tree, alpha = c(1))$unifrac[,,1]
+
+	# write.table(uwUnifrac,file=paste(filename,"unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+	# write.table(wUnifrac,file=paste(filename,"weighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+	# write.table(eUnifrac,file=paste(filename,"entropy_distance.mat",sep="_"),sep="\t",quote=FALSE)
+
+
+
+
+
+	uwUnifrac.totalVarExplained <- sum(apply(uwUnifrac.pcoa,2,function(x) sd(x)*sd(x)))
+	uwUnifrac.varEx <- apply(uwUnifrac.pcoa,2,function(x) sd(x)*sd(x)*uwUnifrac.totalVarExplained)
+
+	wUnifrac.totalVarExplained <- sum(apply(wUnifrac.pcoa,2,function(x) sd(x)*sd(x)))
+	wUnifrac.varEx <- apply(wUnifrac.pcoa,2,function(x) sd(x)*sd(x)*wUnifrac.totalVarExplained)
+
+	eUnifrac.totalVarExplained <- sum(apply(eUnifrac.pcoa,2,function(x) sd(x)*sd(x)))
+	eUnifrac.varEx <- apply(eUnifrac.pcoa,2,function(x) sd(x)*sd(x)*eUnifrac.totalVarExplained)
+
+	uwUnifrac.pcoa <- t(t(uwUnifrac.pcoa)*uwUnifrac.varEx)
+	wUnifrac.pcoa <- t(t(wUnifrac.pcoa)*wUnifrac.varEx)
+	eUnifrac.pcoa <- t(t(eUnifrac.pcoa)*eUnifrac.varEx)
+
+
+	# #plot original groups
+	# palette(c(transparentdarkorchid,transparentaquamarine,"blue","black"))
+	# groups <- as.factor(groups)
+
+
+
+
+
+	# plot(uwUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=groups,main="Unweighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(uwUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(uwUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(wUnifrac.pcoa[,1],wUnifrac.pcoa[,2], type="p",col=groups,main="Weighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(wUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(wUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(eUnifrac.pcoa[,1],eUnifrac.pcoa[,2], type="p",col=groups,main="Information UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(eUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(eUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+
+	#kmeans
+	
+
+	#plot 2 clusters
+	uwUnifrac.kmeans2 <- kmeans(uwUnifrac.pcoa,centers=2)
+	wUnifrac.kmeans2 <- kmeans(wUnifrac.pcoa,centers=2)
+	eUnifrac.kmeans2 <- kmeans(eUnifrac.pcoa,centers=2)
+
+	# plot(uwUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(uwUnifrac.kmeans2$cluster),main="Unweighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(uwUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(uwUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(wUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(wUnifrac.kmeans2$cluster),main="Weighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(wUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(wUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(eUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(eUnifrac.kmeans2$cluster),main="Information UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(eUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(eUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+
+	# print("kmeans 2 within sum of squares:")
+	# print(uwUnifrac.kmeans2$tot.withinss)
+	# print(wUnifrac.kmeans2$tot.withinss)
+	# print(eUnifrac.kmeans2$tot.withinss)
+
+	#plot 3 clusters
+	uwUnifrac.kmeans3 <- kmeans(uwUnifrac.pcoa,centers=3)
+	wUnifrac.kmeans3 <- kmeans(wUnifrac.pcoa,centers=3)
+	eUnifrac.kmeans3 <- kmeans(eUnifrac.pcoa,centers=3)
+
+	# plot(uwUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(uwUnifrac.kmeans3$cluster),main="Unweighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(uwUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(uwUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(wUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(wUnifrac.kmeans3$cluster),main="Weighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(wUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(wUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(eUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(eUnifrac.kmeans3$cluster),main="Information UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(eUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(eUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+
+	# print("kmeans 3 within sum of squares:")
+	# print(uwUnifrac.kmeans3$tot.withinss)
+	# print(wUnifrac.kmeans3$tot.withinss)
+	# print(eUnifrac.kmeans3$tot.withinss)
+
+	#plot 4 clusters
+	uwUnifrac.kmeans4 <- kmeans(uwUnifrac.pcoa,centers=4)
+	wUnifrac.kmeans4 <- kmeans(wUnifrac.pcoa,centers=4)
+	eUnifrac.kmeans4 <- kmeans(eUnifrac.pcoa,centers=4)
+
+	# plot(uwUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(uwUnifrac.kmeans4$cluster),main="Unweighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(uwUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(uwUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(wUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(wUnifrac.kmeans4$cluster),main="Weighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(wUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(wUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(eUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(eUnifrac.kmeans4$cluster),main="Information UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(eUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(eUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+
+	# print("kmeans 4 within sum of squares:")
+	# print(uwUnifrac.kmeans4$tot.withinss)
+	# print(wUnifrac.kmeans4$tot.withinss)
+	# print(eUnifrac.kmeans4$tot.withinss)
+
+
+	#plot 5 clusters
+	uwUnifrac.kmeans5 <- kmeans(uwUnifrac.pcoa,centers=5)
+	wUnifrac.kmeans5 <- kmeans(wUnifrac.pcoa,centers=5)
+	eUnifrac.kmeans5 <- kmeans(eUnifrac.pcoa,centers=5)
+
+	# plot(uwUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(uwUnifrac.kmeans5$cluster),main="Unweighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(uwUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(uwUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(wUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(wUnifrac.kmeans5$cluster),main="Weighted UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(wUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(wUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+	# plot(eUnifrac.pcoa[,1],uwUnifrac.pcoa[,2], type="p",col=as.factor(eUnifrac.kmeans5$cluster),main="Information UniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(eUnifrac.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(eUnifrac.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+
+	# print("kmeans 5 within sum of squares:")
+	# print(uwUnifrac.kmeans5$tot.withinss)
+	# print(wUnifrac.kmeans5$tot.withinss)
+	# print(eUnifrac.kmeans5$tot.withinss)
+
+
+
+	# dev.off()
+
+	#get kmeans metric
+	returnList <- list()
+
+	returnList$uwUnifrac <- list()
+	returnList$uwUnifrac[[1]] <- uwUnifrac.kmeans2
+	returnList$uwUnifrac[[2]] <- uwUnifrac.kmeans3
+	returnList$uwUnifrac[[3]] <- uwUnifrac.kmeans4
+	returnList$uwUnifrac[[4]] <- uwUnifrac.kmeans5
+	
+	returnList$wUnifrac <- list()
+	returnList$wUnifrac[[1]] <- wUnifrac.kmeans2
+	returnList$wUnifrac[[2]] <- wUnifrac.kmeans3
+	returnList$wUnifrac[[3]] <- wUnifrac.kmeans4
+	returnList$wUnifrac[[4]] <- wUnifrac.kmeans5
+	
+	returnList$eUnifrac <- list()
+	returnList$eUnifrac[[1]] <- eUnifrac.kmeans2
+	returnList$eUnifrac[[2]] <- eUnifrac.kmeans3
+	returnList$eUnifrac[[3]] <- eUnifrac.kmeans4
+	returnList$eUnifrac[[4]] <- eUnifrac.kmeans5
+	
+
+	return(returnList)
+}
+
+
 getScreePlotData <- function(pcoa){
 	varExplained <- sum(apply(pcoa$vector,2,function(x) sd(x)*sd(x)))
 	varExplainedByComponent <- apply(pcoa$vector,2,function(x) sd(x)*sd(x)/varExplained)
