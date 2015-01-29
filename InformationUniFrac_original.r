@@ -39,20 +39,6 @@ InformationUniFrac <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
 	#							variance adjusted UniFrac distances. 
 	#
 
-	hasOneOrLessOTU <- function(data) {
-		if(length(which(data!=0))<=1) {
-			return(TRUE)
-		}
-		return(FALSE)
-	}
-
-	oneOrLessOTUSamples <- apply(otu.tab,1,hasOneOrLessOTU)
-	if (length(which(oneOrLessOTUSamples))>0) {
-		error(paste("The following rows of input data have one or less features with counts, and will yield incorrect or NAN iUniFrac difference measures.\n",which(oneOrLessOTUSamples)))
-	}
-
-
-
 	if (!is.rooted(tree)) stop("Rooted phylogenetic tree required!")
 	
 	# Convert into proportions
@@ -60,10 +46,6 @@ InformationUniFrac <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
 	row.sum <- rowSums(otu.tab)
 	otu.tab <- otu.tab / row.sum
 	n <- nrow(otu.tab)
-
-	if (length(which(row.sum <= 100)) > 0) {
-		error(paste("The following rows of input data have 100 or less counts, and are not appropriate for analysis.\n",which(row.sum <= 100)))
-	}
 
 	
 	# Construct the returning array

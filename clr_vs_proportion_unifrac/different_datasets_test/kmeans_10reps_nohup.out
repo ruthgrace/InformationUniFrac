@@ -1,0 +1,52 @@
+Warning messages:
+1: In rgl.init(initValue, onlyNULL) : RGL: unable to open X11 display
+2: In fun(libname, pkgname) : error in rgl_init
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.0-10
+
+Attaching package: ‘vegan’
+
+The following objects are masked from ‘package:phangorn’:
+
+    diversity, treedist
+
+Loading required package: ade4
+
+Attaching package: ‘ade4’
+
+The following object is masked from ‘package:vegan’:
+
+    cca
+
+Error in paste(filename, "unweighted_distance.mat", sep = "_") : 
+  object 'filename' not found
+Calls: read.table -> paste
+recover called non-interactively; frames dumped, use debugger() to view
+Error in paste(filename, "weighted_distance.mat", sep = "_") : 
+  object 'filename' not found
+Calls: read.table -> paste
+recover called non-interactively; frames dumped, use debugger() to view
+Error in paste(filename, "entropy_distance.mat", sep = "_") : 
+  object 'filename' not found
+Calls: read.table -> paste
+recover called non-interactively; frames dumped, use debugger() to view
+Error in as.matrix(D) : object 'uwUnifrac' not found
+Calls: pcoa -> as.matrix
+recover called non-interactively; frames dumped, use debugger() to view
+Error in as.matrix(D) : object 'wUnifrac' not found
+Calls: pcoa -> as.matrix
+recover called non-interactively; frames dumped, use debugger() to view
+Error in as.matrix(D) : object 'eUnifrac' not found
+Calls: pcoa -> as.matrix
+recover called non-interactively; frames dumped, use debugger() to view
+Error: object 'uwUnifrac.pcoa' not found
+No suitable frames for recover()
+Error: object 'wUnifrac.pcoa' not found
+No suitable frames for recover()
+Error: object 'eUnifrac.pcoa' not found
+No suitable frames for recover()
+Error in apply(uwUnifrac.pcoa, 2, function(x) sd(x) * sd(x)) : 
+  object 'uwUnifrac.pcoa' not found
+Calls: kmeansClustering -> apply
+recover called non-interactively; frames dumped, use debugger() to view
