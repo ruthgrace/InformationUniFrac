@@ -241,6 +241,8 @@ getAllPcoaMetrics <- function(otu,groups,tree) {
 	return(returnList)
 }
 
+
+
 getScreePlotData <- function(pcoa){
 	varExplained <- sum(apply(pcoa$vector,2,function(x) sd(x)*sd(x)))
 	varExplainedByComponent <- apply(pcoa$vector,2,function(x) sd(x)*sd(x)/varExplained)
