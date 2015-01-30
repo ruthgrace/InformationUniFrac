@@ -48,7 +48,7 @@ InformationUniFrac <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
 
 	oneOrLessOTUSamples <- apply(otu.tab,1,hasOneOrLessOTU)
 	if (length(which(oneOrLessOTUSamples))>0) {
-		error(paste("The following rows of input data have one or less features with counts, and will yield incorrect or NAN iUniFrac difference measures.\n",which(oneOrLessOTUSamples)))
+		stop(paste("The following rows of input data have one or less features with counts, and will yield incorrect or NAN iUniFrac difference measures.\n",which(oneOrLessOTUSamples)))
 	}
 
 
@@ -62,7 +62,7 @@ InformationUniFrac <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
 	n <- nrow(otu.tab)
 
 	if (length(which(row.sum <= 100)) > 0) {
-		error(paste("The following rows of input data have 100 or less counts, and are not appropriate for analysis.\n",which(row.sum <= 100)))
+		stop(paste("The following rows of input data have 100 or less counts, and are not appropriate for analysis.\n",which(row.sum <= 100)))
 	}
 
 	

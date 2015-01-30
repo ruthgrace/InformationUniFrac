@@ -243,7 +243,8 @@ getAllPcoaMetrics <- function(otu,groups,tree) {
 
 
 
-kmeansClustering <- function(otu,groups,tree,filename,uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa) {
+# kmeansClustering <- function(otu,groups,tree,filename,uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa) {
+kmeansClustering <- function(groups,filename,uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa) {
 	# pdf(paste(filename,".pdf",sep=""))
 
 

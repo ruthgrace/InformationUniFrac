@@ -1,0 +1,11 @@
+Loading required package: ape
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.0-10
+
+Attaching package: ‘vegan’
+
+The following objects are masked from ‘package:phangorn’:
+
+    diversity, treedist
+
