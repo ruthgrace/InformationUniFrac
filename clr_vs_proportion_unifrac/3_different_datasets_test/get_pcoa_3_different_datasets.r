@@ -101,7 +101,18 @@ med.otu <- med.otu.unordered[,taxaOrder]
 taxaOrder <- rev(order(apply(high.otu.unordered,2,sum)))
 high.otu <- high.otu.unordered[,taxaOrder]
 
+#get rid of samples that aren't analyzeable (low read count or monoculture)
+low.samples <- getAnalyzableSamples(low.data.t)
+med.samples <- getAnalyzableSamples(med.data.t)
+high.samples <- getAnalyzableSamples(high.data.t)
 
+low.data.t <- low.data.t[low.samples,]
+med.data.t <- med.data.t[med.samples,]
+high.data.t <- high.data.t[high.samples,]
+
+low.groups <- low.groups[low.samples]
+med.groups <- med.groups[med.samples]
+high.groups <- high.groups[high.samples]
 
 
 printPcoaData(low.otu,low.groups,low.tree,"low_sequencing_depth_pcoa")

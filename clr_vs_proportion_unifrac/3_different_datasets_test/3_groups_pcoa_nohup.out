@@ -16,3 +16,9 @@ The following object is masked from ‘package:vegan’:
 
     cca
 
+Error in eigen(delta1) : infinite or missing values in 'x'
+Calls: printPcoaData -> pcoa -> eigen
+recover called non-interactively; frames dumped, use debugger() to view
+Error in eigen(delta1) : infinite or missing values in 'x'
+Calls: printPcoaData -> pcoa -> eigen
+recover called non-interactively; frames dumped, use debugger() to view

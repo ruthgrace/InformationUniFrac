@@ -448,3 +448,29 @@ getPCoASep <- function(pcoa,groups) {
 	returnList <- t(returnList)
 	return(returnList)
 }
+
+getAnalyzableSamples <- function(otu.tab) {
+	hasMoreThanOneOTU <- function(data) {
+		if(length(which(data!=0))>1) {
+			return(TRUE)
+		}
+		return(FALSE)
+	}
+	indices <- c(1:length(rownames(otu.tab)))
+	MoreThanOneOTU <- apply(otu.tab,1,hasMoreThanOneOTU)
+	if ( (length(rownames(otu.tab))-length(which(MoreThanOneOTU))) >0) {
+		indices <- which(MoreThanOneOTU)
+	}
+
+
+	otu.tab <- as.matrix(otu.tab)
+	row.sum <- rowSums(otu.tab)
+
+	if (length(which(apply(otu.tab,1,sum) <= 100)) > 0) {
+		properReadCountIndices <- which(apply(otu.tab,1,sum) > 100)
+		indices <- indicies[which(indicies %in% properReadCountIndices)]
+	}
+
+	return(indices)
+
+}
