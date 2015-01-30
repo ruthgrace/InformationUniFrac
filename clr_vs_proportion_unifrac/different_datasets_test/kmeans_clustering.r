@@ -80,27 +80,56 @@ taxaOrder <- rev(order(apply(high.otu.unordered,2,sum)))
 high.otu <- high.otu.unordered[,taxaOrder]
 
 
-uwUnifrac <- read.table(paste(filename,"unweighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
-wUnifrac <- read.table(paste(filename,"weighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
-eUnifrac <- read.table(paste(filename,"entropy_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+low.uwUnifrac <- read.table(paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+low.wUnifrac <- read.table(paste("low_sequencing_depth","weighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+low.eUnifrac <- read.table(paste("low_sequencing_depth","entropy_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
 
-uwUnifrac.pcoa <- pcoa(uwUnifrac)
-wUnifrac.pcoa <- pcoa(wUnifrac)
-eUnifrac.pcoa <- pcoa(eUnifrac)
+low.uwUnifrac.pcoa <- pcoa(low.uwUnifrac)
+low.wUnifrac.pcoa <- pcoa(low.wUnifrac)
+low.eUnifrac.pcoa <- pcoa(low.eUnifrac)
 
 #scale the pcoa vectors by var explained
-uwUnifrac.pcoa <- uwUnifrac.pcoa$vectors
-wUnifrac.pcoa <- wUnifrac.pcoa$vectors
-eUnifrac.pcoa <- eUnifrac.pcoa$vectors
+low.uwUnifrac.pcoa <- low.uwUnifrac.pcoa$vectors
+low.wUnifrac.pcoa <- low.wUnifrac.pcoa$vectors
+low.eUnifrac.pcoa <- low.eUnifrac.pcoa$vectors
+
+
+med.uwUnifrac <- read.table(paste("med_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+med.wUnifrac <- read.table(paste("med_sequencing_depth","weighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+med.eUnifrac <- read.table(paste("med_sequencing_depth","entropy_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+
+med.uwUnifrac.pcoa <- pcoa(med.uwUnifrac)
+med.wUnifrac.pcoa <- pcoa(med.wUnifrac)
+med.eUnifrac.pcoa <- pcoa(med.eUnifrac)
+
+#scale the pcoa vectors by var explained
+med.uwUnifrac.pcoa <- med.uwUnifrac.pcoa$vectors
+med.wUnifrac.pcoa <- med.wUnifrac.pcoa$vectors
+med.eUnifrac.pcoa <- med.eUnifrac.pcoa$vectors
+
+
+high.uwUnifrac <- read.table(paste("high_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+high.wUnifrac <- read.table(paste("high_sequencing_depth","weighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+high.eUnifrac <- read.table(paste("high_sequencing_depth","entropy_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+
+high.uwUnifrac.pcoa <- pcoa(high.uwUnifrac)
+high.wUnifrac.pcoa <- pcoa(high.wUnifrac)
+high.eUnifrac.pcoa <- pcoa(high.eUnifrac)
+
+#scale the pcoa vectors by var explained
+high.uwUnifrac.pcoa <- high.uwUnifrac.pcoa$vectors
+high.wUnifrac.pcoa <- high.wUnifrac.pcoa$vectors
+high.eUnifrac.pcoa <- high.eUnifrac.pcoa$vectors
+
 
 low.kmeans <- list()
 med.kmeans <- list()
 high.kmeans <- list()
 
 for (i in c(1:10)){
-	low.kmeans[[i]] <- kmeansClustering(low.otu,low.groups,low.tree,"low_sequencing_depth",uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa)
-	med.kmeans[[i]] <- kmeansClustering(med.otu,med.groups,med.tree,"med_sequencing_depth",uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa)
-	high.kmeans[[i]] <- kmeansClustering(high.otu,high.groups,high.tree,"high_sequencing_depth",uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa)
+	low.kmeans[[i]] <- kmeansClustering(low.otu,low.groups,low.tree,"low_sequencing_depth",low.uwUnifrac.pcoa,low.wUnifrac.pcoa,low.eUnifrac.pcoa)
+	med.kmeans[[i]] <- kmeansClustering(med.otu,med.groups,med.tree,"med_sequencing_depth",med.uwUnifrac.pcoa,med.wUnifrac.pcoa,med.eUnifrac.pcoa)
+	high.kmeans[[i]] <- kmeansClustering(high.otu,high.groups,high.tree,"high_sequencing_depth",high.uwUnifrac.pcoa,high.wUnifrac.pcoa,high.eUnifrac.pcoa)
 
 }
 
