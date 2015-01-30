@@ -242,7 +242,9 @@ getAllPcoaMetrics <- function(otu,groups,tree) {
 }
 
 
-kmeansClustering <- function(otu,groups,tree,filename,uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa) {
+
+# kmeansClustering <- function(otu,groups,tree,filename,uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa) {
+kmeansClustering <- function(groups,filename,uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa) {
 	# pdf(paste(filename,".pdf",sep=""))
 
 
@@ -375,7 +377,6 @@ kmeansClustering <- function(otu,groups,tree,filename,uwUnifrac.pcoa,wUnifrac.pc
 	return(returnList)
 }
 
-
 getScreePlotData <- function(pcoa){
 	varExplained <- sum(apply(pcoa$vector,2,function(x) sd(x)*sd(x)))
 	varExplainedByComponent <- apply(pcoa$vector,2,function(x) sd(x)*sd(x)/varExplained)
@@ -446,4 +447,30 @@ getPCoASep <- function(pcoa,groups) {
 	rownames(returnList) <- c("separationOn1","separationOn12","separationOn123")
 	returnList <- t(returnList)
 	return(returnList)
+}
+
+getAnalyzableSamples <- function(otu.tab) {
+	hasMoreThanOneOTU <- function(data) {
+		if(length(which(data!=0))>1) {
+			return(TRUE)
+		}
+		return(FALSE)
+	}
+	indices <- c(1:length(rownames(otu.tab)))
+	MoreThanOneOTU <- apply(otu.tab,1,hasMoreThanOneOTU)
+	if ( (length(rownames(otu.tab))-length(which(MoreThanOneOTU))) >0) {
+		indices <- which(MoreThanOneOTU)
+	}
+
+
+	otu.tab <- as.matrix(otu.tab)
+	row.sum <- rowSums(otu.tab)
+
+	if (length(which(apply(otu.tab,1,sum) <= 100)) > 0) {
+		properReadCountIndices <- which(apply(otu.tab,1,sum) > 100)
+		indices <- indicies[which(indicies %in% properReadCountIndices)]
+	}
+
+	return(indices)
+
 }

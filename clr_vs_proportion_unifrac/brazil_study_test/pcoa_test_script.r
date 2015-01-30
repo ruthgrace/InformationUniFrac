@@ -58,7 +58,10 @@ otuMaxTax <- taxonomy[otuWhichMax]
 #otuDominated <- c(otuDominated[which(as.numeric(otuMaxTax[otuDominated])==32)],otuDominated[which(as.numeric(otuMaxTax[otuDominated])==33)])
 
 taxonomyGroups <- as.character(groups)
-taxonomyGroups[otuDominated] <- as.character(otuMaxTax[otuDominated])
+otuDominatedNoLacto <- otuDominated[which(!(c(1:length(otuDominated) %in% grep("Lactobacillaceae",otuMaxTax[otuDominated]))))]
+otuDominatedLacto <- otuDominated[grep("Lactobacillaceae",otuMaxTax[otuDominated])]
+taxonomyGroups[otuDominatedNoLacto] <- as.character(otuMaxTax[otuDominatedNoLacto])
+
 taxonomyGroups <- as.factor(taxonomyGroups)
 
 groups <- taxonomyGroups
@@ -77,6 +80,7 @@ for (i in 1:length(splittaxa)) {
 }
 
 levels(taxonomyGroups) <- newLevels
+
 
 
 # caculate pcoa vectors
@@ -292,9 +296,12 @@ par(plotParameters)
 
 
 #choose colors for each condition
-palette(c("blue4","cornflowerblue","darkcyan","deepskyblue","cyan","dodgerblue","red","orange","blue","black"))
+palette(c("purple","green","red","orange","blue","black"))
 
 #create and plot iUniFrac PCoA with just intermediate + BV
+
+originalgroups[otuDominatedLacto] <- "n"
+originalgroups[which(rownames(brazil.otu.tab)=="327bbv")] <- "n"
 
 gUnifrac.ibv <- gUnifrac[which(!(originalgroups=="n")),which(!(originalgroups=="n"))]
 eUnifrac.ibv <- eUnifrac[which(!(originalgroups=="n")),which(!(originalgroups=="n"))]
@@ -321,7 +328,6 @@ eUnifrac.ibv2.varEx <- sd(eUnifrac.ibv.pcoa$vector[,2])*sd(eUnifrac.ibv.pcoa$vec
 #repeat with biplot
 
 
-
 brazil.ibv <- brazil.otu.tab[which(!(originalgroups=="n")),]
 
 
@@ -340,14 +346,14 @@ colnames(otuEntropy) <- lapply(taxonomy,getTaxonomyLabel)
 
 
 plot(gUnifrac.ibv.pcoa$vector[,1],gUnifrac.ibv.pcoa$vector[,2], col=ibvGroups,main="weighted UniFrac PCoA\nBV and Intermediate samples",xlab=paste("First Component", round(gUnifrac.ibv1.varEx,digits=3),"variance explained"),ylab=paste("Second Component", round(gUnifrac.ibv2.varEx,digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
-legend(-0.55,0.3,levels(bvGroups),col=palette(),pch=19)
-
+legend(-0.45,0.22,levels(ibvGroups),col=palette(),pch=19)
+par(cex=0.7)
 biplot(gUnifrac.ibv.pcoa,otuProp)
 
 par(plotParameters)
 
 plot(eUnifrac.ibv.pcoa$vector[,1],eUnifrac.ibv.pcoa$vector[,2], col=ibvGroups,main="information UniFrac PCoA\nBV and Intermediate samples",xlab=paste("First Component", round(eUnifrac.ibv1.varEx,digits=3),"variance explained"),ylab=paste("Second Component", round(eUnifrac.ibv2.varEx,digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
-
+par(cex=0.7)
 biplot(eUnifrac.ibv.pcoa,otuEntropy)
 
 
@@ -400,14 +406,14 @@ colnames(otuEntropy) <- lapply(taxonomy,getTaxonomyLabel)
 
 
 plot(gUnifrac.bv.pcoa$vector[,1],gUnifrac.bv.pcoa$vector[,2], col=bvGroups,main="weighted UniFrac PCoA\nBV samples",xlab=paste("First Component", round(gUnifrac.bv1.varEx,digits=3),"variance explained"),ylab=paste("Second Component", round(gUnifrac.bv2.varEx,digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
-legend(-0.55,0.3,levels(bvGroups),col=palette(),pch=19)
-
+legend(-0.32,0.2,levels(bvGroups),col=palette(),pch=19)
+par(cex=0.7)
 biplot(gUnifrac.bv.pcoa,otuProp)
 
 par(plotParameters)
 
 plot(eUnifrac.bv.pcoa$vector[,1],eUnifrac.bv.pcoa$vector[,2], col=bvGroups,main="information UniFrac PCoA\nBV samples",xlab=paste("First Component", round(eUnifrac.bv1.varEx,digits=3),"variance explained"),ylab=paste("Second Component", round(eUnifrac.bv2.varEx,digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
-
+par(cex=0.7)
 biplot(eUnifrac.bv.pcoa,otuEntropy)
 
 
