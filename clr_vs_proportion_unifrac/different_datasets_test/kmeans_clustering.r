@@ -127,15 +127,15 @@ med.kmeans <- list()
 high.kmeans <- list()
 
 for (i in c(1:10)){
-	low.kmeans[[i]] <- kmeansClustering(low.otu,low.groups,low.tree,"low_sequencing_depth",low.uwUnifrac.pcoa,low.wUnifrac.pcoa,low.eUnifrac.pcoa)
-	med.kmeans[[i]] <- kmeansClustering(med.otu,med.groups,med.tree,"med_sequencing_depth",med.uwUnifrac.pcoa,med.wUnifrac.pcoa,med.eUnifrac.pcoa)
-	high.kmeans[[i]] <- kmeansClustering(high.otu,high.groups,high.tree,"high_sequencing_depth",high.uwUnifrac.pcoa,high.wUnifrac.pcoa,high.eUnifrac.pcoa)
+	low.kmeans[[i]] <- kmeansClustering(low.groups,"low_sequencing_depth",low.uwUnifrac.pcoa,low.wUnifrac.pcoa,low.eUnifrac.pcoa)
+	med.kmeans[[i]] <- kmeansClustering(med.groups,"med_sequencing_depth",med.uwUnifrac.pcoa,med.wUnifrac.pcoa,med.eUnifrac.pcoa)
+	high.kmeans[[i]] <- kmeansClustering(high.groups,"high_sequencing_depth",high.uwUnifrac.pcoa,high.wUnifrac.pcoa,high.eUnifrac.pcoa)
 
 }
 
 save(low.kmeans,file="low_kmeans_replicates.dat")
 save(med.kmeans,file="med_kmeans_replicates.dat")
-save(med.kmeans,file="med_kmeans_replicates.dat")
+save(high.kmeans,file="high_kmeans_replicates.dat")
 
 printKmeansMetric <- function(kmeans,metric) {
 	uw2 <- metric(kmeans$uwUnifrac[[1]])
@@ -163,3 +163,23 @@ metric <- function(kmeansObject) {
 	return(kmeansObject$tot.withinss/kmeansObject$totss)
 }
 
+
+load("high_kmeans_replicates.dat")
+load("med_kmeans_replicates.dat")
+load("low_kmeans_replicates.dat")
+
+printKmeansError <- function(kmeansObjectList) {
+
+	withinOverTotal <- data.frame(matrix(ncol=12))
+	colnames(withinOverTotal) <- c(paste("uw",c(2:5),sep=""),paste("w",c(2:5),sep=""),paste("e",c(2:5),sep=""))
+
+	for (i in 1:10) {
+		for (j in 1:4) {
+			kmeansObjectList[i][[1]]$uwUnifrac[[1]]$totss
+			# INCOMPLETETETT
+		}
+		
+	}
+
+	
+}
