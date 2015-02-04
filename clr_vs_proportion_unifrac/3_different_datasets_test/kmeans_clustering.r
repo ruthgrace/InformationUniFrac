@@ -80,9 +80,17 @@ taxaOrder <- rev(order(apply(high.otu.unordered,2,sum)))
 high.otu <- high.otu.unordered[,taxaOrder]
 
 
-uwUnifrac.pcoa <- read.table(paste("low_sequencing_depth_pcoa","unweighted_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
-wUnifrac.pcoa <- read.table(paste("med_sequencing_depth_pcoa","weighted_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
-eUnifrac.pcoa <- read.table(paste("high_sequencing_depth_pcoa","information_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
+low.uwUnifrac.pcoa <- read.table(paste("low_sequencing_depth_pcoa","unweighted_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
+low.wUnifrac.pcoa <- read.table(paste("low_sequencing_depth_pcoa","weighted_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
+low.eUnifrac.pcoa <- read.table(paste("low_sequencing_depth_pcoa","information_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
+
+med.uwUnifrac.pcoa <- read.table(paste("med_sequencing_depth_pcoa","unweighted_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
+med.wUnifrac.pcoa <- read.table(paste("med_sequencing_depth_pcoa","weighted_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
+med.eUnifrac.pcoa <- read.table(paste("med_sequencing_depth_pcoa","information_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
+
+high.uwUnifrac.pcoa <- read.table(paste("high_sequencing_depth_pcoa","unweighted_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
+high.wUnifrac.pcoa <- read.table(paste("high_sequencing_depth_pcoa","weighted_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
+high.eUnifrac.pcoa <- read.table(paste("high_sequencing_depth_pcoa","information_Unifrac",sep="_"),sep="\t",header=TRUE,row.names=1)
 
 
 low.kmeans <- list()
@@ -94,9 +102,9 @@ for (i in c(1:10)){
 	# med.kmeans[[i]] <- kmeansClustering(med.otu,med.groups,med.tree,"med_sequencing_depth",uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa)
 	# high.kmeans[[i]] <- kmeansClustering(high.otu,high.groups,high.tree,"high_sequencing_depth",uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa)
 
-	low.kmeans[[i]] <- kmeansClustering(low.groups,"low_sequencing_depth",uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa)
-	med.kmeans[[i]] <- kmeansClustering(med.groups,"med_sequencing_depth",uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa)
-	high.kmeans[[i]] <- kmeansClustering(high.groups,"high_sequencing_depth",uwUnifrac.pcoa,wUnifrac.pcoa,eUnifrac.pcoa)
+	low.kmeans[[i]] <- kmeansClustering(low.groups,"low_sequencing_depth",low.uwUnifrac.pcoa,low.wUnifrac.pcoa,low.eUnifrac.pcoa)
+	med.kmeans[[i]] <- kmeansClustering(med.groups,"med_sequencing_depth",med.uwUnifrac.pcoa,med.wUnifrac.pcoa,med.eUnifrac.pcoa)
+	high.kmeans[[i]] <- kmeansClustering(high.groups,"high_sequencing_depth",high.uwUnifrac.pcoa,high.wUnifrac.pcoa,high.eUnifrac.pcoa)
 
 
 }

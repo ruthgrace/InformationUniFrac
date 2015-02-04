@@ -468,7 +468,7 @@ getAnalyzableSamples <- function(otu.tab) {
 
 	if (length(which(apply(otu.tab,1,sum) <= 100)) > 0) {
 		properReadCountIndices <- which(apply(otu.tab,1,sum) > 100)
-		indices <- indicies[which(indicies %in% properReadCountIndices)]
+		indices <- indices[which(indices %in% properReadCountIndices)]
 	}
 
 	return(indices)
