@@ -1,0 +1,25 @@
+Loading required package: ape
+Warning messages:
+1: In rgl.init(initValue, onlyNULL) : RGL: unable to open X11 display
+2: In fun(libname, pkgname) : error in rgl_init
+Loading required package: ade4
+Loading required package: vegan
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.0-10
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:ade4’:
+
+    cca
+
+The following objects are masked from ‘package:phangorn’:
+
+    diversity, treedist
+
+Warning messages:
+1: In InformationUniFrac(data.otu.tab, data.tree, alpha = c(1)) :
+  Some samples have one or less OTU with reads, and will yield incorrect or NAN iUniFrac difference measures.
+2: In InformationUniFrac(data.otu.tab, data.tree, alpha = c(1)) :
+  The tree has more OTU than the OTU table!

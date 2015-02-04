@@ -1,0 +1,42 @@
+Warning messages:
+1: In rgl.init(initValue, onlyNULL) : RGL: unable to open X11 display
+2: In fun(libname, pkgname) : error in rgl_init
+Loading required package: ade4
+Loading required package: vegan
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.0-10
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:ade4’:
+
+    cca
+
+The following objects are masked from ‘package:phangorn’:
+
+    diversity, treedist
+
+Warning message:
+In GUniFrac(data.otu.tab, data.tree, alpha = c(1)) :
+  The tree has more OTU than the OTU table!
+Warning message:
+In InformationUniFrac(data.otu.tab, data.tree, alpha = c(1)) :
+  The tree has more OTU than the OTU table!
+Error in eigen(delta1) : infinite or missing values in 'x'
+Calls: pcoa -> eigen
+recover called non-interactively; frames dumped, use debugger() to view
+Error in apply(eUnifrac.pcoa$vector, 2, function(x) sd(x) * sd(x)) : 
+  object 'eUnifrac.pcoa' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in is.data.frame(x) : object 'eUnifrac.pcoa' not found
+Calls: sd -> var -> is.data.frame
+recover called non-interactively; frames dumped, use debugger() to view
+Error in is.data.frame(x) : object 'eUnifrac.pcoa' not found
+Calls: sd -> var -> is.data.frame
+recover called non-interactively; frames dumped, use debugger() to view
+Error in plot(eUnifrac.pcoa$vectors[, 1], eUnifrac.pcoa$vectors[, 2],  : 
+  object 'eUnifrac.pcoa' not found
+recover called non-interactively; frames dumped, use debugger() to view
+pdf 
+  2 
