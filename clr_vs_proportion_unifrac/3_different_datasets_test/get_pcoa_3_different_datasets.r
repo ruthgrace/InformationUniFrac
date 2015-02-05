@@ -33,9 +33,9 @@ printPcoaData <- function(otu,groups,tree,fileName) {
 	wUnifrac.pcoa <- pcoa(wUnifrac)$vectors
 	eUnifrac.pcoa <- pcoa(eUnifrac)$vectors
 
-	write.table(uwUnifrac.pcoa,paste(fileName,"unweighted_Unifrac",sep="_"),sep="\t")
-	write.table(wUnifrac.pcoa,paste(fileName,"weighted_Unifrac",sep="_"),sep="\t")
-	write.table(eUnifrac.pcoa,paste(fileName,"information_Unifrac",sep="_"),sep="\t")
+	write.table(uwUnifrac.pcoa,file=paste(fileName,"unweighted_Unifrac",sep="_"),sep="\t")
+	write.table(wUnifrac.pcoa,file=paste(fileName,"weighted_Unifrac",sep="_"),sep="\t")
+	write.table(eUnifrac.pcoa,file=paste(fileName,"information_Unifrac",sep="_"),sep="\t")
 }
 
 

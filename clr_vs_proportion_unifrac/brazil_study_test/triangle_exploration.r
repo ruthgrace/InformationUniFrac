@@ -4,6 +4,11 @@ options(error=recover)
 library(ape)
 library(phangorn)
 
+
+#this GUniFrac script was ripped straight from the GUniFrac package, with no changes.
+source("../../GUniFrac.R")
+source("../../InformationUniFrac.R")
+
 #### USEFUL FUNCTIONS ####
 
 triangleTest <- function(triangles,distMat,dataFrame) {
@@ -105,11 +110,6 @@ writeProcessedDistMat <- function(otu,tree,metadata,weightedOutFile,informationO
 
 
 getProcessedDistMat <- function(otu,tree,metadata) {
-
-	#this GUniFrac script was ripped straight from the GUniFrac package, with no changes.
-	source("../../GUniFrac.R")
-
-	source("../../InformationUniFrac.R")
 
 	brazil.otu.tab <- otu
 	brazil.tree <- tree
@@ -229,33 +229,59 @@ writeInvalidTriangles(gUnifrac,eUnifrac,"invalid_triangles.dat")
 
 # # ^ failure. found nothing.
 
-#### TRY DROPPING TIPS FROM TREE TO SEE IF NUMBER OF INVALID TRIANGLES DECREASE ####
-load("processedBrazilTable.dat")
-load("processedBrazilTree.dat")
-load("processedBrazilMetadata.dat")
+#### TRY REMOVING MOST PROBLEMATIC SAMPLE ####
 
-#drop each OTU from the tree and re-run triangle calculation
-invalidTriangles <- list()
-for (index in 1:ncol(brazil.otu.tab)) {
-	treeMinusOne <- drop.tip(brazil.tree,colnames(brazil.otu.tab)[index])
-	distMat <- getProcessedDistMat(brazil.otu.tab,brazil.tree,MyMetaOrdered)
-	invalidTriangles[[index]] <- getInvalidTriangles(distMat$gUnifrac,distMat$eUnifrac)
-}
+distMat <- getProcessedDistMat(brazil.otu.tab,brazil.tree,MyMetaOrdered)
 
-save(invalidTriangles,file="invalid_triangles_with_dropped_OTUs.dats")
+desiredSamples <- c(1:64,66:length(rownames(brazil.otu.tab)))
+gUnifracWithout65 <- distMat$gUnifrac[desiredSamples,desiredSamples]
+eUnifracWithout65 <- distMat$eUnifrac[desiredSamples,desiredSamples]
 
+trianglesWithout65 <- getInvalidTriangles(gUnifracWithout65,eUnifracWithout65)
+
+save(trianglesWithout65,file="invalid_triangles_without_problem_sample_65.dat")	
+
+
+# #### TRY DROPPING TIPS FROM TREE TO SEE IF NUMBER OF INVALID TRIANGLES DECREASE ####
+
+# load("processedBrazilTable.dat")
+# load("processedBrazilTree.dat")
+# load("processedBrazilMetadata.dat")
+
+# #drop each OTU from the tree and re-run triangle calculation
+# invalidTriangles <- list()
+# for (index in 1:ncol(brazil.otu.tab)) {
+# 	treeMinusOne <- drop.tip(brazil.tree,colnames(brazil.otu.tab)[index])
+# 	distMat <- getProcessedDistMat(brazil.otu.tab,brazil.tree,MyMetaOrdered)
+# 	invalidTriangles[[index]] <- getInvalidTriangles(distMat$gUnifrac,distMat$eUnifrac)
+# }
+
+# save(invalidTriangles,file="invalid_triangles_with_dropped_OTUs.dat")
+
+# # ^fail. same number of invalid triangles
 
 #### EXPLORE EFFECT OF TREE CHANGES ON INVALID TRIANGLES FOR INFORMATION UNIFRAC ####
 
-treeWithPolytomies <- brazil.tree
+nReplicates <- 10
 
-#introduce polytomy (make 3 random edge lengths zero)
-treeWithPolytomies$edge.lengths[sample(c(1:length(treeWithPolytomies$edge.lengths),3))] <- 0
+polytomyReplicates <- list()
 
-#calculate distance matrix
-polytomyDistMat <- getProcessedDistMat(brazil.otu.tab,brazil.tree,MyMetaOrdered)
+for(index in 1:nReplicates) {
+	treeWithPolytomies <- brazil.tree
 
-#run triangle analysis
-polytomyInvalidTriangles <- getInvalidTriangles(polytomyDistMat$gUnifrac,polytomyDistMat$eUnifrac)
+	#introduce polytomy (make 3 random edge lengths zero)
+	treeWithPolytomies$edge.length[sample(c(1:length(treeWithPolytomies$edge.length)),20)] <- 0
 
-save(polytomyInvalidTriangles,file="polytomyInvalidTriangles.dat")
+	#calculate distance matrix
+	polytomyDistMat <- getProcessedDistMat(brazil.otu.tab,brazil.tree,MyMetaOrdered)
+
+	#run triangle analysis
+	polytomyReplicates[[index]] <- getInvalidTriangles(polytomyDistMat$gUnifrac,polytomyDistMat$eUnifrac)
+
+}
+
+save(polytomyReplicates,file="polytomyInvalidTrianglesReplicates.dat")	
+
+# ^ fail. the exact same broken triangles still occur (and none for information unifrac)
+
+
