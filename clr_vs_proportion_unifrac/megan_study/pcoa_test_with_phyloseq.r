@@ -72,33 +72,15 @@ if (length(oneOrLessOTUSamples)>0) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #run CLRUniFrac and weightedUnifrac for comparison, puts distance matrix in unweightedUnifrac and weightedUnifrac
 calculatedUnifrac <- GUniFrac(data.otu.tab, data.tree, alpha = c(1))
 unweightedUnifrac <- calculatedUnifrac$unifrac[,,2]
 weightedUnifrac <- calculatedUnifrac$unifrac[,,1]
 eUnifrac <- InformationUniFrac(data.otu.tab, data.tree, alpha = c(1))$unifrac[,,1]
 
-write.table(unweightedUnifrac,file="unweightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
-write.table(weightedUnifrac,file="weightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
-write.table(eUnifrac,file="eUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
+write.table(unweightedUnifrac,file="phyloseq_unweightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
+write.table(weightedUnifrac,file="phyloseq_weightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
+write.table(eUnifrac,file="phyloseq_eUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
 
 #clrDirichletUniFrac <- CLRDirichletUniFrac(data.otu.tab, data.tree, alpha = c(1))$unifrac[,,1]
 
