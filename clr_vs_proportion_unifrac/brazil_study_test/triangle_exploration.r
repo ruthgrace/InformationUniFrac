@@ -126,6 +126,26 @@ getProcessedDistMat <- function(otu,tree,metadata) {
 	return(returnList)
 }
 
+getProcessedPhyloWeightedDistMat <- function(otu,tree,metadata) {
+
+	brazil.otu.tab <- otu_table(otu, taxa_are_rows=FALSE)
+	brazil.tree <- tree
+	MyMetaOrdered <- metadata
+
+	phyloseqObject <- phyloseq(brazil.otu.tab,brazil.tree)
+
+	weightedUnifrac <- UniFrac(phyloseqObject, TRUE, TRUE)
+
+	#run IUniFrac and GUniFrac for comparison, puts distance matrix in eUnifrac and gUnifrac
+	gUnifrac <- as.matrix(weightedUnifrac)
+
+	# returnList <- list()
+	# returnList$gUnifrac <- gUnifrac
+	# return(returnList)
+	return(gUnifrac)
+}
+
+
 
 
 
@@ -306,4 +326,10 @@ save(polytomyReplicates,file="polytomyInvalidTrianglesReplicates.dat")
 
 # ^ fail. the exact same broken triangles still occur (and none for information unifrac)
 
+
+#### TRY USING PHYLOSEQ UNIFRAC METHOD ####
+
+load("processedBrazilTable.dat")
+load("processedBrazilTree.dat")
+load("processedBrazilMetadata.dat")
 
