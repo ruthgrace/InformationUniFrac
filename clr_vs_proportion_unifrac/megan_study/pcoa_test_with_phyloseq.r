@@ -82,7 +82,6 @@ weightedUnifrac <- UniFrac(phyloseqObject, TRUE, TRUE)
 # load("phyloseq_weightedUniFracDistanceMatrix.dat")
 
 
-
 eUnifrac <- InformationUniFrac(data.otu.tab, data.tree, alpha = c(1))$unifrac[,,1]
 
 
@@ -91,24 +90,6 @@ write.table(as.matrix(unweightedUnifrac),file="phyloseq_unweightedUniFracDistanc
 write.table(as.matrix(weightedUnifrac),file="phyloseq_weightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
 # eunifrac not actually done the phyloseq way.
 write.table(eUnifrac,file="phyloseq_eUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #clrDirichletUniFrac <- CLRDirichletUniFrac(data.otu.tab, data.tree, alpha = c(1))$unifrac[,,1]
