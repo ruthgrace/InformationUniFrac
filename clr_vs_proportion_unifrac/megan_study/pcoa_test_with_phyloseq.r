@@ -15,9 +15,8 @@ plotParameters <- par()
 
 #this weightedUnifrac script was ripped straight from the weightedUnifrac package, with no changes.
 source("../../GUnifrac.R")
-
 source("../../InformationUniFrac_original.R")
-
+source("../metrics.r")
 
 # read OTU table and format appropriately for input into UniFrac methods
 data.otu.tab <- read.table("./megan_data/master_table_knight.txt", header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
@@ -48,20 +47,20 @@ otu_indicies <- otu_indicies[!is.na(otu_indicies)]
 data.otu.tab <- data.otu.tab[otu_indicies,]
 MyMetaOrdered <- MyMeta[match(rownames(data.otu.tab),rownames(MyMeta)),]
 
-#remove all samples with one or less OTU
-hasOneOrLessOTU <- function(data) {
-	if(length(which(data!=0))<=1) {
-		return(TRUE)
-	}
-	return(FALSE)
-}
+# #remove all samples with one or less OTU
+# hasOneOrLessOTU <- function(data) {
+# 	if(length(which(data!=0))<=1) {
+# 		return(TRUE)
+# 	}
+# 	return(FALSE)
+# }
 
-oneOrLessOTUSamples <- apply(data.otu.tab,1,hasOneOrLessOTU)
-moreThanOneOTUSamples <- which(oneOrLessOTUSamples==FALSE)
-oneOrLessOTUSamples <- which(oneOrLessOTUSamples==TRUE)
-if (length(oneOrLessOTUSamples)>0) {
-	data.otu.tab <- data.otu.tab[moreThanOneOTUSamples,]
-}
+# oneOrLessOTUSamples <- apply(data.otu.tab,1,hasOneOrLessOTU)
+# moreThanOneOTUSamples <- which(oneOrLessOTUSamples==FALSE)
+# oneOrLessOTUSamples <- which(oneOrLessOTUSamples==TRUE)
+# if (length(oneOrLessOTUSamples)>0) {
+# 	data.otu.tab <- data.otu.tab[moreThanOneOTUSamples,]
+# }
 
 analyzableSamples <- getAnalyzableSamples(data.otu.tab)
 data.otu.tab <- data.otu.tab[analyzableSamples,]
@@ -73,7 +72,9 @@ otuTable <- otu_table(data.otu.tab, taxa_are_rows=FALSE)
 phyloseqObject <- phyloseq(otuTable,data.tree)
 
 unweightedUnifrac <- UniFrac(phyloseqObject, FALSE, TRUE)
+write.table(as.matrix(unweightedUnifrac),file="phyloseq_unweightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
 weightedUnifrac <- UniFrac(phyloseqObject, TRUE, TRUE)
+write.table(as.matrix(weightedUnifrac),file="phyloseq_weightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
 
 # save(unweightedUnifrac, file="phyloseq_unweightedUniFracDistanceMatrix.dat")
 # save(weightedUnifrac, file="phyloseq_weightedUniFracDistanceMatrix.dat")
@@ -83,11 +84,6 @@ weightedUnifrac <- UniFrac(phyloseqObject, TRUE, TRUE)
 
 
 eUnifrac <- InformationUniFrac(data.otu.tab, data.tree, alpha = c(1))$unifrac[,,1]
-
-
-
-write.table(as.matrix(unweightedUnifrac),file="phyloseq_unweightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
-write.table(as.matrix(weightedUnifrac),file="phyloseq_weightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
 # eunifrac not actually done the phyloseq way.
 write.table(eUnifrac,file="phyloseq_eUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
 
