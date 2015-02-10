@@ -1,0 +1,194 @@
+Loading required package: ape
+Warning messages:
+1: In rgl.init(initValue, onlyNULL) : RGL: unable to open X11 display
+2: In fun(libname, pkgname) : error in rgl_init
+Error in file(file, "rt") : cannot open the connection
+Calls: read.table -> file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file './master_table_knight.txt': No such file or directory
+recover called non-interactively; frames dumped, use debugger() to view
+Error in rownames(data.otu.tab) : object 'data.otu.tab' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in apply(data.otu.tab, 2, as.numeric) : 
+  object 'data.otu.tab' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error: object 'taxa' not found
+No suitable frames for recover()
+Error in rownames(data.otu.tab) : object 'data.otu.tab' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in as.matrix(data.otu.tab) : object 'data.otu.tab' not found
+Calls: t -> as.matrix
+recover called non-interactively; frames dumped, use debugger() to view
+Error in apply(data.otu.tab, 2, sum) : object 'data.otu.tab' not found
+Calls: rev -> order -> apply
+recover called non-interactively; frames dumped, use debugger() to view
+Error: object 'taxonomy' not found
+No suitable frames for recover()
+Error: object 'data.otu.tab' not found
+No suitable frames for recover()
+Error in file(file, "rt") : cannot open the connection
+Calls: read.table -> file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file './meta_analysis_table_oct30_2014 - meta_analysis_table_feb19_fixed.tsv': No such file or directory
+recover called non-interactively; frames dumped, use debugger() to view
+Error in rownames(metadata) : object 'metadata' not found
+Calls: match -> rownames
+recover called non-interactively; frames dumped, use debugger() to view
+Error: object 'sampleIndices' not found
+No suitable frames for recover()
+Error: object 'metadata' not found
+No suitable frames for recover()
+Error in rownames(data.otu.tab) : object 'data.otu.tab' not found
+Calls: match -> rownames
+recover called non-interactively; frames dumped, use debugger() to view
+Error: object 'sampleIndices' not found
+No suitable frames for recover()
+Error: object 'data.otu.tab' not found
+No suitable frames for recover()
+[1] "ROUND 1"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 2"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "samples  392 272 228 do not fit triangle inequality -- 13 > 23+12:  0.0941403375567587 0.419766245227734 0.51402762877592"
+[1] "samples  188 272 228 do not fit triangle inequality -- 13 > 23+12:  0.0949166820117038 0.419766245227734 0.516541136739145"
+[1] "samples  267 272 228 do not fit triangle inequality -- 13 > 23+12:  0.0965374365115633 0.419766245227734 0.517708341881897"
+[1] "samples  462 272 228 do not fit triangle inequality -- 13 > 23+12:  0.0886618273763047 0.419766245227734 0.510185219012901"
+[1] "samples  547 272 228 do not fit triangle inequality -- 13 > 23+12:  0.0953372090970483 0.419766245227734 0.517579297742409"
+[1] "samples  285 272 228 do not fit triangle inequality -- 13 > 23+12:  0.09450458259061 0.419766245227734 0.516844248905059"
+[1] "samples  441 272 228 do not fit triangle inequality -- 13 > 23+12:  0.0961843823142991 0.419766245227734 0.517865223954636"
+[1] "samples  158 272 228 do not fit triangle inequality -- 13 > 23+12:  0.096863312924951 0.419766245227734 0.518005614217879"
+[1] "samples  59 272 228 do not fit triangle inequality -- 13 > 23+12:  0.0927003887921625 0.419766245227734 0.514012308669384"
+[1] "samples  507 272 228 do not fit triangle inequality -- 13 > 23+12:  0.0935220598201641 0.419766245227734 0.514917244468638"
+[1] "samples  375 272 228 do not fit triangle inequality -- 13 > 23+12:  0.0710436806215715 0.419766245227734 0.491252212065517"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "samples  62 9 543 do not fit triangle inequality -- 12 > 23+13:  0.469152404513034 0.202108198906403 0.265625549391483"
+[1] "ROUND 3"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "samples  444 386 267 do not fit triangle inequality -- 23 > 12+13:  0.510898628151707 0.627147260287044 0.115830928395689"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "samples  905 660 844 do not fit triangle inequality -- 23 > 12+13:  0.328087906676424 0.910874660898822 0.557306831022259"
+[1] "samples  905 660 419 do not fit triangle inequality -- 23 > 12+13:  0.328087906676424 0.869663903898266 0.523434967151861"
+[1] "samples  905 660 470 do not fit triangle inequality -- 23 > 12+13:  0.328087906676424 0.849271250986725 0.516527800067734"
+[1] "samples  905 660 811 do not fit triangle inequality -- 23 > 12+13:  0.328087906676424 0.904765928758522 0.574943677992359"
+[1] "samples  905 682 863 do not fit triangle inequality -- 23 > 12+13:  0.465922544887291 0.899641108692788 0.416860494060578"
+[1] "samples  746 593 863 do not fit triangle inequality -- 13 > 23+12:  0.544406920329488 0.322644329523908 0.878848542403661"
+[1] "ROUND 4"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 5"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 6"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 7"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "samples  41 844 275 do not fit triangle inequality -- 23 > 12+13:  0.434524129037856 0.575847264597096 0.137735391453612"
+[1] "samples  543 844 275 do not fit triangle inequality -- 23 > 12+13:  0.358803581864633 0.575847264597096 0.196276688498486"
+[1] "samples  358 844 275 do not fit triangle inequality -- 23 > 12+13:  0.398131173291334 0.575847264597096 0.163695310733364"
+[1] "ROUND 8"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "samples  543 191 80 do not fit triangle inequality -- 13 > 23+12:  0.29653321231769 0.113130339537418 0.409846431036317"
+[1] "samples  543 191 467 do not fit triangle inequality -- 13 > 23+12:  0.29653321231769 0.114756368853532 0.411635365988362"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "samples  458 657 219 do not fit triangle inequality -- 12 > 23+13:  0.695669973365297 0.440230921308575 0.237425811016877"
+[1] "samples  458 219 844 do not fit triangle inequality -- 13 > 23+12:  0.237425811016877 0.426783446866474 0.7290696494383"
+[1] "samples  458 543 844 do not fit triangle inequality -- 13 > 23+12:  0.336539823743941 0.358803581864633 0.7290696494383"
+[1] "samples  458 844 27 do not fit triangle inequality -- 12 > 23+13:  0.7290696494383 0.496348121763594 0.223754916156986"
+[1] "ROUND 9"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "samples  228 136 272 do not fit triangle inequality -- 12 > 23+13:  0.516518294202816 0.0945108313468022 0.419766245227734"
+[1] "samples  228 476 272 do not fit triangle inequality -- 12 > 23+13:  0.510836531191965 0.0904182007874091 0.419766245227734"
+[1] "samples  228 483 272 do not fit triangle inequality -- 12 > 23+13:  0.518195508974981 0.0972445314396289 0.419766245227734"
+[1] "samples  228 272 567 do not fit triangle inequality -- 13 > 23+12:  0.419766245227734 0.095767802297858 0.516839764638976"
+[1] "samples  228 272 330 do not fit triangle inequality -- 13 > 23+12:  0.419766245227734 0.0970344690670997 0.517950298453871"
+[1] "samples  504 136 749 do not fit triangle inequality -- 23 > 12+13:  0.0341863656994084 0.622539710262441 0.588166643163612"
+[1] "samples  504 483 749 do not fit triangle inequality -- 23 > 12+13:  0.0364889599078622 0.626054188770143 0.588166643163612"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 10"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "samples  101 141 358 do not fit triangle inequality -- 12 > 23+13:  0.433219514063397 0.154961165819515 0.266773772445033"
+[1] "samples  141 358 879 do not fit triangle inequality -- 13 > 23+12:  0.154961165819515 0.351943501150774 0.510234519666007"
+[1] "ROUND 11"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "samples  478 449 458 do not fit triangle inequality -- 13 > 23+12:  0.132880271146963 0.297705816560221 0.434021901363652"
+[1] "samples  478 449 358 do not fit triangle inequality -- 13 > 23+12:  0.132880271146963 0.368370664046832 0.502017976213342"
+[1] "samples  478 272 71 do not fit triangle inequality -- 13 > 23+12:  0.0960594066950226 0.282169548504812 0.378244567927609"
+[1] "samples  330 449 458 do not fit triangle inequality -- 13 > 23+12:  0.133465856697128 0.297705816560221 0.434824666735424"
+[1] "samples  330 449 358 do not fit triangle inequality -- 13 > 23+12:  0.133465856697128 0.368370664046832 0.502420242234449"
+[1] "samples  110 449 458 do not fit triangle inequality -- 13 > 23+12:  0.134037527886909 0.297705816560221 0.434978066274131"
+[1] "samples  110 449 358 do not fit triangle inequality -- 13 > 23+12:  0.134037527886909 0.368370664046832 0.502625964546888"
+[1] "samples  110 272 71 do not fit triangle inequality -- 13 > 23+12:  0.0974503792664102 0.282169548504812 0.379818145205945"
+[1] "samples  449 458 367 do not fit triangle inequality -- 23 > 12+13:  0.297705816560221 0.434242627583933 0.128952764295112"
+[1] "samples  449 458 547 do not fit triangle inequality -- 23 > 12+13:  0.297705816560221 0.434171777526487 0.132735935595614"
+[1] "samples  449 458 128 do not fit triangle inequality -- 23 > 12+13:  0.297705816560221 0.433537915971925 0.131803288025712"
+[1] "samples  449 458 242 do not fit triangle inequality -- 23 > 12+13:  0.297705816560221 0.430518204301309 0.131271639752407"
+[1] "samples  449 367 358 do not fit triangle inequality -- 23 > 12+13:  0.128952764295112 0.502353294592103 0.368370664046832"
+[1] "samples  449 547 358 do not fit triangle inequality -- 23 > 12+13:  0.132735935595614 0.501815606586736 0.368370664046832"
+[1] "samples  449 128 358 do not fit triangle inequality -- 23 > 12+13:  0.131803288025712 0.501813442164729 0.368370664046832"
+[1] "samples  272 367 71 do not fit triangle inequality -- 23 > 12+13:  0.0955648214946924 0.378595930726009 0.282169548504812"
+[1] "samples  272 432 71 do not fit triangle inequality -- 23 > 12+13:  0.0961675127990693 0.379214395607501 0.282169548504812"
+[1] "samples  272 71 547 do not fit triangle inequality -- 23 > 12+13:  0.282169548504812 0.378320217876842 0.0953372090970483"
+[1] "samples  272 71 128 do not fit triangle inequality -- 23 > 12+13:  0.282169548504812 0.378409661343423 0.0959484170302379"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "samples  458 107 358 do not fit triangle inequality -- 12 > 23+13:  0.545337913380929 0.238568997561591 0.304406180886894"
+[1] "ROUND 12"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 13"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 14"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 15"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 16"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "samples  74 219 98 do not fit triangle inequality -- 12 > 23+13:  0.47743460994443 0.323468553434764 0.153679573576156"
+[1] "samples  219 757 98 do not fit triangle inequality -- 12 > 23+13:  0.476165567711964 0.152193325587034 0.323468553434764"
+[1] "samples  219 98 249 do not fit triangle inequality -- 13 > 23+12:  0.323468553434764 0.142665111992238 0.466480151928133"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "samples  467 913 730 do not fit triangle inequality -- 13 > 23+12:  0.491083413423797 0.323291810604555 0.825368737248033"
+[1] "ROUND 17"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 18"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "ROUND 19"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"
+[1] "samples  624 863 630 do not fit triangle inequality -- 12 > 23+13:  0.902042583378677 0.611985992602784 0.269460308225125"
+[1] "samples  624 899 630 do not fit triangle inequality -- 12 > 23+13:  0.832277683335781 0.560039356978813 0.269460308225125"
+[1] "ROUND 20"
+[1] "UNWEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "WEIGHTED UNIFRAC TRIANGLE TEST"
+[1] "samples  773 68 306 do not fit triangle inequality -- 13 > 23+12:  0.362288018065708 0.048524536958552 0.411626839608836"
+[1] "samples  526 432 657 do not fit triangle inequality -- 23 > 12+13:  0.0859222584768139 0.650448590685422 0.564072800759568"
+[1] "INFORMATION UNIFRAC TRIANGLE TEST"

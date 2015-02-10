@@ -51,14 +51,14 @@ data.otu.tab <- data.otu.tab[,taxaOrder]
 
 
 
-unweightedUnifrac <- read.table("unweightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
-weightedUnifrac <- read.table("weightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
-eUnifrac <- read.table("eUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
+# unweightedUnifrac <- read.table("unweightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
+# weightedUnifrac <- read.table("weightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
+# eUnifrac <- read.table("eUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
 
 
-# unweightedUnifrac <- read.table("phyloseq_unweightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
-# weightedUnifrac <- read.table("phyloseq_weightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
-# eUnifrac <- read.table("phyloseq_eUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
+unweightedUnifrac <- read.table("phyloseq_unweightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
+weightedUnifrac <- read.table("phyloseq_weightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
+eUnifrac <- read.table("phyloseq_eUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
 
 
 
