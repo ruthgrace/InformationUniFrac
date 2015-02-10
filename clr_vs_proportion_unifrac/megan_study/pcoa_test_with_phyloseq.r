@@ -5,6 +5,7 @@ options(error=recover)
 
 library(ape)
 library(phangorn)
+library(phyloseq)
 
 # commenting out incorrect clr dirichlet
 
@@ -15,7 +16,7 @@ plotParameters <- par()
 #this weightedUnifrac script was ripped straight from the weightedUnifrac package, with no changes.
 source("../../GUnifrac.R")
 
-source("../../InformationUniFrac.R")
+source("../../InformationUniFrac_original.R")
 
 
 # read OTU table and format appropriately for input into UniFrac methods
@@ -41,9 +42,6 @@ data.tree <- midpoint(data.tree)
 # read metadata
 MyMeta<- read.table("./megan_data/meta_analysis_table_oct30_2014 - meta_analysis_table_feb19_fixed.tsv", header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
 
-#remove infected sample S38I
-#MyMeta <- MyMeta[(which(rownames(MyMeta)!="S38I")),]
-
 # filter OTU table and metadata so that only samples which appear in both are retained
 otu_indicies <- match(rownames(MyMeta),rownames(data.otu.tab))
 otu_indicies <- otu_indicies[!is.na(otu_indicies)]
@@ -65,40 +63,53 @@ if (length(oneOrLessOTUSamples)>0) {
 	data.otu.tab <- data.otu.tab[moreThanOneOTUSamples,]
 }
 
+analyzableSamples <- getAnalyzableSamples(data.otu.tab)
+data.otu.tab <- data.otu.tab[analyzableSamples,]
+MyMetaOrdered <- MyMetaOrdered[analyzableSamples,]
+
+
+otuTable <- otu_table(data.otu.tab, taxa_are_rows=FALSE)
+
+phyloseqObject <- phyloseq(otuTable,data.tree)
+
+unweightedUnifrac <- UniFrac(phyloseqObject, FALSE, TRUE)
+weightedUnifrac <- UniFrac(phyloseqObject, TRUE, TRUE)
+
+# save(unweightedUnifrac, file="phyloseq_unweightedUniFracDistanceMatrix.dat")
+# save(weightedUnifrac, file="phyloseq_weightedUniFracDistanceMatrix.dat")
+
+# load("phyloseq_unweightedUniFracDistanceMatrix.dat")
+# load("phyloseq_weightedUniFracDistanceMatrix.dat")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#run CLRUniFrac and weightedUnifrac for comparison, puts distance matrix in unweightedUnifrac and weightedUnifrac
-calculatedUnifrac <- GUniFrac(data.otu.tab, data.tree, alpha = c(1))
-unweightedUnifrac <- calculatedUnifrac$unifrac[,,2]
-weightedUnifrac <- calculatedUnifrac$unifrac[,,1]
 eUnifrac <- InformationUniFrac(data.otu.tab, data.tree, alpha = c(1))$unifrac[,,1]
 
-write.table(unweightedUnifrac,file="unweightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
-write.table(weightedUnifrac,file="weightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
-write.table(eUnifrac,file="eUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
+
+
+write.table(as.matrix(unweightedUnifrac),file="phyloseq_unweightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
+write.table(as.matrix(weightedUnifrac),file="phyloseq_weightedUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
+# eunifrac not actually done the phyloseq way.
+write.table(eUnifrac,file="phyloseq_eUniFracDistanceMatrix.txt",append=FALSE,quote=FALSE,sep="\t")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #clrDirichletUniFrac <- CLRDirichletUniFrac(data.otu.tab, data.tree, alpha = c(1))$unifrac[,,1]
 

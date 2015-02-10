@@ -1,6 +1,8 @@
+Warning message:
+package ‘ape’ was built under R version 3.1.2 
 Loading required package: permute
 Loading required package: lattice
-This is vegan 2.0-10
+This is vegan 2.2-1
 
 Attaching package: ‘vegan’
 
@@ -8,6 +10,8 @@ The following objects are masked from ‘package:phangorn’:
 
     diversity, treedist
 
+Warning message:
+package ‘vegan’ was built under R version 3.1.2 
 Loading required package: ade4
 
 Attaching package: ‘ade4’
@@ -16,9 +20,3 @@ The following object is masked from ‘package:vegan’:
 
     cca
 
-Error in eigen(delta1) : infinite or missing values in 'x'
-Calls: printPcoaData -> pcoa -> eigen
-recover called non-interactively; frames dumped, use debugger() to view
-Error in eigen(delta1) : infinite or missing values in 'x'
-Calls: printPcoaData -> pcoa -> eigen
-recover called non-interactively; frames dumped, use debugger() to view

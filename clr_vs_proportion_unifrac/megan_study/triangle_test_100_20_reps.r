@@ -55,6 +55,13 @@ unweightedUnifrac <- read.table("unweightedUniFracDistanceMatrix.txt",sep="\t",c
 weightedUnifrac <- read.table("weightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
 eUnifrac <- read.table("eUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
 
+
+# unweightedUnifrac <- read.table("phyloseq_unweightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
+# weightedUnifrac <- read.table("phyloseq_weightedUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
+# eUnifrac <- read.table("phyloseq_eUniFracDistanceMatrix.txt",sep="\t",check.names=FALSE,quote="")
+
+
+
 metadata<- read.table("./meta_analysis_table_oct30_2014 - meta_analysis_table_feb19_fixed.tsv", header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
 
 sampleIndices <- match(rownames(metadata),rownames(unweightedUnifrac))

@@ -106,9 +106,9 @@ low.samples <- getAnalyzableSamples(low.data.t)
 med.samples <- getAnalyzableSamples(med.data.t)
 high.samples <- getAnalyzableSamples(high.data.t)
 
-low.data.t <- low.data.t[low.samples,]
-med.data.t <- med.data.t[med.samples,]
-high.data.t <- high.data.t[high.samples,]
+low.otu <- low.otu[low.samples,]
+med.otu <- med.otu[med.samples,]
+high.otu <- high.otu[high.samples,]
 
 low.groups <- low.groups[low.samples]
 med.groups <- med.groups[med.samples]
