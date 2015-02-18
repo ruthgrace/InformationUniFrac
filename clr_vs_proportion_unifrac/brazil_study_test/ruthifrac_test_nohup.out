@@ -1,0 +1,22 @@
+Warning message:
+package ‘ape’ was built under R version 3.1.2 
+Loading required package: ade4
+Loading required package: vegan
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.2-1
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:ade4’:
+
+    cca
+
+The following objects are masked from ‘package:phangorn’:
+
+    diversity, treedist
+
+Warning message:
+package ‘vegan’ was built under R version 3.1.2 
+pdf 
+  2 
