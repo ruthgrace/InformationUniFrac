@@ -51,6 +51,14 @@ rUnweighted <- getDistanceMatrix(brazil.otu.tab,brazil.tree,method="unweighted")
 rWeighted <- getDistanceMatrix(brazil.otu.tab,brazil.tree,method="weighted")
 rInformation <- getDistanceMatrix(brazil.otu.tab,brazil.tree,method="information")
 
+write.table(gUnweighted,file="unweighted_general_unifrac_distance_matrix.txt",sep="\t",quote=FALSE)
+write.table(gWeighted,file="weighted_general_unifrac_distance_matrix.txt",sep="\t",quote=FALSE)
+write.table(gInformation,file="information_general_unifrac_distance_matrix.txt",sep="\t",quote=FALSE)
+write.table(rUnweighted,file="unweighted_Ruthifrac_distance_matrix.txt",sep="\t",quote=FALSE)
+write.table(rWeighted,file="weighted_Ruthifrac_distance_matrix.txt",sep="\t",quote=FALSE)
+write.table(rInformation,file="information_Ruthifrac_distance_matrix.txt",sep="\t",quote=FALSE)
+
+
 #conditions (bv - bacterial vaginosis as scored by nugent/amsel, i - intermediate, n - normal/healthy)
 groups <- MyMetaOrdered$n_status #levels bv, i, n
 originalgroups <- groups

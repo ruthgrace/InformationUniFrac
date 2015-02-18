@@ -14,13 +14,13 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 
 	if (!is.rooted(tree)) {
 		tree <- midpoint(tree)
+		if(verbose) { print("Rooting tree by midpoint") }
 	}
 
 	if (attributes(tree)$order!="postorder") {
 		reorder(tree,order="postorder")
+		if (verbose) { print("Reordering tree as postorder for distance calculation algorithm") }
 	}
-
-	if(verbose) {	print("prepped tree for analysis")	}
 
 	# get proportions
 	otu.prop <- t(apply(otuTable,1,function(x) x/sum(x)))

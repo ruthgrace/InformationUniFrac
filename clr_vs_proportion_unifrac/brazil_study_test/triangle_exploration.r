@@ -385,3 +385,16 @@ print("test")
 
 writePhyloProcessedFiles("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","weightedUnifracPhyloDistMat.txt","informationUnifracPhyloDistMat.txt")
 writeInvalidTriangles(gUnifrac,eUnifrac,"invalid_triangles.dat")
+
+
+#^ same result as gunifrac
+
+#### TRY PROBABLY BROKEN SELF-WRITTEN UNIFRAC ####
+# (unweighted unifrac looks completely different from other methods)
+
+
+
+
+
+
+
