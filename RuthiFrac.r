@@ -95,7 +95,7 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 
 	#matching branch lengths to weights order - DEBUG
 	branchLengths <- branchLengths[order(tree$edge[,2])]
-	weights <- weights[which(!is.na(match(colnames(weights),tree$edge[,2])))]
+	weights <- weights[,which(!is.na(match(colnames(weights),tree$edge[,2])))]
 
 
 	if(verbose) {	print("calculating pairwise distances...")	}
@@ -106,7 +106,7 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 
 			#remove branch lengths that aren't in either sample
 			comparisonBranchLengths <- branchLengths
-			excludeBranchLengths <- which( (weights[i,] < 0) & (weights[j,] < 0) )
+			excludeBranchLengths <- which( (weights[i,] <= 0) & (weights[j,] <= 0) )
 			comparisonBranchLengths[excludeBranchLengths] <- 0
 
 			#turn branch lengths into proportions
