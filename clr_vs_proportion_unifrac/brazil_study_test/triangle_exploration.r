@@ -251,6 +251,20 @@ getInvalidTriangles <- function(gUnifrac,eUnifrac) {
 }
 
 
+getInvalidTrianglesOneTable <- function(gUnifrac) {
+	samples <- rownames(gUnifrac)
+	
+	columnNames <- c(paste("index",c(1:3),sep=""),"dist12","dist23","dist13","difference")
+
+	fail <- data.frame(matrix(ncol=7,nrow=0))
+	colnames(fail) <- columnNames
+
+	triangles <- combn(c(1:length(samples)),3)
+
+	fail <- triangleTest(triangles,gUnifrac,fail)
+
+	return(fail)
+}
 
 # #### MAKE DISTANCE MATRIX ####
 
@@ -392,9 +406,20 @@ writeInvalidTriangles(gUnifrac,eUnifrac,"invalid_triangles.dat")
 #### TRY PROBABLY BROKEN SELF-WRITTEN UNIFRAC ####
 # (unweighted unifrac looks completely different from other methods)
 
+gUnweighted <- read.table("unweighted_general_unifrac_distance_matrix.txt",sep="\t",check.names=FALSE,row.names=1)
+gWeighted <- read.table("weighted_general_unifrac_distance_matrix.txt",sep="\t",check.names=FALSE,row.names=1)
+gInformation <- read.table("information_general_unifrac_distance_matrix.txt",sep="\t",check.names=FALSE,row.names=1)
+rUnweighted <- read.table("unweighted_Ruthifrac_distance_matrix.txt",sep="\t",check.names=FALSE,row.names=1)
+rWeighted <- read.table("weighted_Ruthifrac_distance_matrix.txt",sep="\t",check.names=FALSE,row.names=1)
+rInformation <- read.table("information_Ruthifrac_distance_matrix.txt",sep="\t",check.names=FALSE,row.names=1)
 
-
-
+fail <- list()
+fail$rUnweighted <- getInvalidTrianglesOneTable(rUnweighted)
+fail$rWeighted <- getInvalidTrianglesOneTable(rWeighted)
+fail$rInformation <- getInvalidTrianglesOneTable(rInformation)
+fail$gUnweighted <- getInvalidTrianglesOneTable(gUnweighted)
+fail$gWeighted <- getInvalidTrianglesOneTable(gWeighted)
+fail$gInformation <- getInvalidTrianglesOneTable(gInformation)
 
 
 
