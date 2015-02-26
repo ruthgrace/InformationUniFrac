@@ -272,78 +272,82 @@ getInvalidTrianglesOneTable <- function(gUnifrac) {
 
 
 
-# #### READ IN DISTANCE MATRIX ####
+#### READ IN DISTANCE MATRIX ####
 
-# gUnifrac <- read.table("weightedUnifracDistMat.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
-# eUnifrac <- read.table("informationUnifracDistMat.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+gUnifrac <- read.table("weightedUnifracDistMat.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+eUnifrac <- read.table("informationUnifracDistMat.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
 
-# #### CALCULATE ALL TRIANGLES ####
+#### CALCULATE ALL TRIANGLES ####
 
-# writeInvalidTriangles(gUnifrac,eUnifrac,"invalid_triangles.dat")
-
-
-# #### EXPLORE PROBLEMATIC SAMPLES ####
-
-# save(invalidTriangles,file="invalid_triangles.rds")
-# numSamples <- length(rownames(gUnifrac))
-
-# # which sample appears the most frequently
-# sampleNums <- c(fail$weightedText[,1],fail$weightedText[,2],fail$weightedText[,3])
-# histogram <- hist(sampleNums,breaks=c(1:numSamples))
-# # max count is 184
-# #sample with max counts is at index 65
-# problemSample <- brazil.otu.tab[which(histogram$counts == max(histogram$counts)),]
-
-# #does this sample have OTUs that other samples dont have?
-# maxCount <- apply(brazil.otu.tab,2,max)
-# which(brazil.otu.tab[65,]==maxCount)
-# #otu at 17th index ("16") is the one for which sample 65 has maxcount
-# #	[1] Bacteria;Actinobacteria;Actinobacteria;Coriobacteriales;Coriobacteriaceae;Atopobium;rimae
-
-# #try dropping this OTU to see if the number of invalid triangles decreases
-# treeWithout16 <- drop.tip(tree,"16")
-# writeProcessedDistMat(brazil.otu.tab,brazil.tree,MyMetaOrdered,"weightedUnifracDistMatWithoutOTU16.txt","informationUnifracDistMatWithoutOTU16.txt")
-# gUnifracWithout16 <- read.table("weightedUnifracDistMatWithoutOTU16.txt",sep="\t",header=TRUE,row.names=1,check.names=FALSE)
-# eUnifracWithout16 <- read.table("informationUnifracDistMatWithoutOTU16.txt",sep="\t",header=TRUE,row.names=1,check.names=FALSE)
-
-# writeInvalidTriangles(gUnifracWithout16,eUnifracWithout16,"invalid_triangles_without_OTU16.rds")
-# load("invalid_triangles_without_OTU16.rds")
-
-# # ^ failure. found nothing.
-
-# #### TRY REMOVING MOST PROBLEMATIC SAMPLE 66 ####
-
-# distMat <- getProcessedDistMat(brazil.otu.tab,brazil.tree,MyMetaOrdered)
-
-# desiredSamples <- c(1:65,67:length(rownames(brazil.otu.tab)))
-# gUnifracWithout65 <- distMat$gUnifrac[desiredSamples,desiredSamples]
-# eUnifracWithout65 <- distMat$eUnifrac[desiredSamples,desiredSamples]
-
-# trianglesWithout65 <- getInvalidTriangles(gUnifracWithout65,eUnifracWithout65)
-
-# save(trianglesWithout65,file="invalid_triangles_without_problem_sample_65.dat")	
+writeInvalidTriangles(gUnifrac,eUnifrac,"invalid_triangles.dat")
 
 
+#### EXPLORE PROBLEMATIC SAMPLES ####
 
-# ## remove next most problematic sample ##
-# numSamples <- length(rownames(gUnifracWithout65))
-# sampleNums <- c(trianglesWithout65$weightedText[,1],trianglesWithout65$weightedText[,2],trianglesWithout65$weightedText[,3])
-# histogram <- hist(sampleNums,breaks=c(1:numSamples))
-# #next sample is index 56
-# desiredSamples <- c(1:56,58:numSamples)
-# gUnifracWithout56 <- gUnifracWithout65[desiredSamples,desiredSamples]
-# eUnifracWithout56 <- eUnifracWithout65[desiredSamples,desiredSamples]
+save(invalidTriangles,file="invalid_triangles.rds")
+numSamples <- length(rownames(gUnifrac))
 
-# trianglesWithout56 <- getInvalidTriangles(gUnifracWithout56,eUnifracWithout56)
+# which sample appears the most frequently
+sampleNums <- c(fail$weightedText[,1],fail$weightedText[,2],fail$weightedText[,3])
+histogram <- hist(sampleNums,breaks=c(1:numSamples))
+# max count is 184
+#sample with max counts is at index 65
+problemSample <- brazil.otu.tab[which(histogram$counts == max(histogram$counts)),]
 
-# save(trianglesWithout56,file="invalid_triangles_without_problem_sample_56.dat")	
+#does this sample have OTUs that other samples dont have?
+maxCount <- apply(brazil.otu.tab,2,max)
+which(brazil.otu.tab[65,]==maxCount)
+#otu at 17th index ("16") is the one for which sample 65 has maxcount
+#	[1] Bacteria;Actinobacteria;Actinobacteria;Coriobacteriales;Coriobacteriaceae;Atopobium;rimae
+
+#try dropping this OTU to see if the number of invalid triangles decreases
+treeWithout16 <- drop.tip(tree,"16")
+writeProcessedDistMat(brazil.otu.tab,brazil.tree,MyMetaOrdered,"weightedUnifracDistMatWithoutOTU16.txt","informationUnifracDistMatWithoutOTU16.txt")
+gUnifracWithout16 <- read.table("weightedUnifracDistMatWithoutOTU16.txt",sep="\t",header=TRUE,row.names=1,check.names=FALSE)
+eUnifracWithout16 <- read.table("informationUnifracDistMatWithoutOTU16.txt",sep="\t",header=TRUE,row.names=1,check.names=FALSE)
+
+writeInvalidTriangles(gUnifracWithout16,eUnifracWithout16,"invalid_triangles_without_OTU16.rds")
+load("invalid_triangles_without_OTU16.rds")
+
+# ^ failure. found nothing.
+
+#### TRY REMOVING MOST PROBLEMATIC SAMPLE 66 ####
+
+distMat <- getProcessedDistMat(brazil.otu.tab,brazil.tree,MyMetaOrdered)
+
+desiredSamples <- c(1:65,67:length(rownames(brazil.otu.tab)))
+gUnifracWithout65 <- distMat$gUnifrac[desiredSamples,desiredSamples]
+eUnifracWithout65 <- distMat$eUnifrac[desiredSamples,desiredSamples]
+
+trianglesWithout65 <- getInvalidTriangles(gUnifracWithout65,eUnifracWithout65)
+
+save(trianglesWithout65,file="invalid_triangles_without_problem_sample_65.dat")	
 
 
 
-# # next problematic sample is not that problematic (only in about 20 of the 80 invalid triangles)
-# numSamples <- length(rownames(gUnifracWithout56))
-# sampleNums <- c(trianglesWithout56$weightedText[,1],trianglesWithout56$weightedText[,2],trianglesWithout56$weightedText[,3])
-# histogram <- hist(sampleNums,breaks=c(1:numSamples))
+## remove next most problematic sample ##
+numSamples <- length(rownames(gUnifracWithout65))
+sampleNums <- c(trianglesWithout65$weightedText[,1],trianglesWithout65$weightedText[,2],trianglesWithout65$weightedText[,3])
+histogram <- hist(sampleNums,breaks=c(1:numSamples))
+#next sample is index 56
+desiredSamples <- c(1:56,58:numSamples)
+gUnifracWithout56 <- gUnifracWithout65[desiredSamples,desiredSamples]
+eUnifracWithout56 <- eUnifracWithout65[desiredSamples,desiredSamples]
+
+trianglesWithout56 <- getInvalidTriangles(gUnifracWithout56,eUnifracWithout56)
+
+save(trianglesWithout56,file="invalid_triangles_without_problem_sample_56.dat")	
+
+
+
+# next problematic sample is not that problematic (only in about 20 of the 80 invalid triangles)
+numSamples <- length(rownames(gUnifracWithout56))
+sampleNums <- c(trianglesWithout56$weightedText[,1],trianglesWithout56$weightedText[,2],trianglesWithout56$weightedText[,3])
+histogram <- hist(sampleNums,breaks=c(1:numSamples))
+
+
+#### MAKE MINIMAL INVALID TRIANGLE CASE ####
+
 
 
 # #### TRY DROPPING TIPS FROM TREE TO SEE IF NUMBER OF INVALID TRIANGLES DECREASE ####

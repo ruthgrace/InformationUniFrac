@@ -18,5 +18,21 @@ The following objects are masked from ‘package:phangorn’:
 
 Warning message:
 package ‘vegan’ was built under R version 3.1.2 
+[1] "calculated proportional abundance"
+[1] "calculating weights..."
+[1] "done calculating weights"
+[1] "calculating pairwise distances..."
+[1] "done"
+[1] "calculated proportional abundance"
+[1] "calculating weights..."
+[1] "done calculating weights"
+[1] "calculating pairwise distances..."
+[1] "done"
+[1] "calculated proportional abundance"
+[1] "calculating weights..."
+[1] "done calculating weights"
+[1] "information entropy transform"
+[1] "calculating pairwise distances..."
+[1] "done"
 pdf 
   2 

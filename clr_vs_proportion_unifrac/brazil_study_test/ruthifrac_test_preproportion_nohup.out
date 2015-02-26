@@ -1,0 +1,103 @@
+Warning message:
+package ‘ape’ was built under R version 3.1.2 
+Loading required package: ade4
+Loading required package: vegan
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.2-1
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:ade4’:
+
+    cca
+
+The following objects are masked from ‘package:phangorn’:
+
+    diversity, treedist
+
+Warning message:
+package ‘vegan’ was built under R version 3.1.2 
+Error in `[.data.frame`(weights, , match(colnames(weights), order(tree$edge[,  : 
+  undefined columns selected
+Calls: getDistanceMatrix -> [ -> [.data.frame
+recover called non-interactively; frames dumped, use debugger() to view
+Error in `[.data.frame`(weights, , match(colnames(weights), order(tree$edge[,  : 
+  undefined columns selected
+Calls: getDistanceMatrix -> [ -> [.data.frame
+recover called non-interactively; frames dumped, use debugger() to view
+Error in `[.data.frame`(weights, , match(colnames(weights), order(tree$edge[,  : 
+  undefined columns selected
+Calls: getDistanceMatrix -> [ -> [.data.frame
+recover called non-interactively; frames dumped, use debugger() to view
+Error in is.data.frame(x) : object 'rUnweighted' not found
+Calls: write.table -> is.data.frame
+recover called non-interactively; frames dumped, use debugger() to view
+Error in is.data.frame(x) : object 'rWeighted' not found
+Calls: write.table -> is.data.frame
+recover called non-interactively; frames dumped, use debugger() to view
+Error in is.data.frame(x) : object 'rInformation' not found
+Calls: write.table -> is.data.frame
+recover called non-interactively; frames dumped, use debugger() to view
+Error in as.matrix(D) : object 'rUnweighted' not found
+Calls: pcoa -> as.matrix
+recover called non-interactively; frames dumped, use debugger() to view
+Error in as.matrix(D) : object 'rWeighted' not found
+Calls: pcoa -> as.matrix
+recover called non-interactively; frames dumped, use debugger() to view
+Error in as.matrix(D) : object 'rInformation' not found
+Calls: pcoa -> as.matrix
+recover called non-interactively; frames dumped, use debugger() to view
+Error in apply(vector, 2, function(x) sd(x) * sd(x)) : 
+  object 'rUnweighted.pcoa' not found
+Calls: getVarExplained -> apply
+recover called non-interactively; frames dumped, use debugger() to view
+Error in apply(vector, 2, function(x) sd(x) * sd(x)) : 
+  object 'rWeighted.pcoa' not found
+Calls: getVarExplained -> apply
+recover called non-interactively; frames dumped, use debugger() to view
+Error in apply(vector, 2, function(x) sd(x) * sd(x)) : 
+  object 'rInformation.pcoa' not found
+Calls: getVarExplained -> apply
+recover called non-interactively; frames dumped, use debugger() to view
+Error in unlist(rUnweighted[lower.tri(rUnweighted, diag = TRUE)]) : 
+  object 'rUnweighted' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in unlist(rWeighted[lower.tri(rWeighted, diag = TRUE)]) : 
+  object 'rWeighted' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in unlist(rInformation[lower.tri(rInformation, diag = TRUE)]) : 
+  object 'rInformation' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in plot(rUnweighted.pcoa$vectors[, 1], rUnweighted.pcoa$vectors[,  : 
+  object 'rUnweighted.pcoa' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in plot(rWeighted.pcoa$vectors[, 1], rWeighted.pcoa$vectors[, 2],  : 
+  object 'rWeighted.pcoa' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in plot(rInformation.pcoa$vectors[, 1], rInformation.pcoa$vectors[,  : 
+  object 'rInformation.pcoa' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in plot(rUnweighted.vector, rInformation.vector, main = "unweighted vs. information RuthiFrac") : 
+  object 'rUnweighted.vector' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in plot(rWeighted.vector, rInformation.vector, main = "weighted vs. information RuthiFrac") : 
+  object 'rWeighted.vector' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in plot(rUnweighted.vector, rWeighted.vector, main = "unweighted vs. weighted RuthiFrac") : 
+  object 'rUnweighted.vector' not found
+recover called non-interactively; frames dumped, use debugger() to view
+Error in xy.coords(x, y, xlabel, ylabel, log) : 
+  object 'rUnweighted.vector' not found
+Calls: plot -> plot.default -> xy.coords
+recover called non-interactively; frames dumped, use debugger() to view
+Error in xy.coords(x, y, xlabel, ylabel, log) : 
+  object 'rWeighted.vector' not found
+Calls: plot -> plot.default -> xy.coords
+recover called non-interactively; frames dumped, use debugger() to view
+Error in xy.coords(x, y, xlabel, ylabel, log) : 
+  object 'rInformation.vector' not found
+Calls: plot -> plot.default -> xy.coords
+recover called non-interactively; frames dumped, use debugger() to view
+pdf 
+  2 

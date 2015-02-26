@@ -18,12 +18,13 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 	}
 
 	if (attributes(tree)$order!="postorder") {
-		reorder(tree,order="postorder")
+		tree <- reorder(tree,order="postorder")
 		if (verbose) { print("Reordering tree as postorder for distance calculation algorithm") }
 	}
 
 	# get proportions
-	otu.prop <- t(apply(otuTable,1,function(x) x/sum(x)))
+	readsPerSample <- apply(otuTable,1,sum)
+	otu.prop <- otuTable/readsPerSample
 	rownames(otu.prop) <- rownames(otuTable)
 	colnames(otu.prop) <- colnames(otuTable)
 
@@ -32,11 +33,14 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 	##get cumulative proportional abundance for the nodes (nodes are ordered same as in the phylo tree representation)
 
 	#cumulative proportional abundance stored in weights
+	#weights <- data.frame(matrix(0,ncol=(length(tree$edge.length) + 1),nrow=nrow(otuTable)))
 	weights <- data.frame(matrix(NA,ncol=(length(tree$edge.length) + 1),nrow=nrow(otuTable)))
 	#each row is a sample
 	rownames(weights) <- rownames(otuTable)
 	#each column is the abundance weighting for a node in the phylogenetic tree
 	colnames(weights) <- c(1:(length(tree$edge.length)+1))
+
+	treeLeaves <- c(1:length(tree$tip.label))
 
 	#loop through edges
 	#if child node of edge (of which there is only one) has not been seen before, it is a leaf
@@ -46,10 +50,12 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 		parentNode <- tree$edge[i,1]
 		childNode <- tree$edge[i,2]
 
-		if ( ( (length(which(is.na(weights[,parentNode]))) !=0) & (length(which(is.na(weights[,parentNode]))) != 124) ) | ( (length(which(is.na(weights[,childNode])))) != 0 & (length(which(is.na(weights[,childNode]))) != 124)) ) {
+		# if (childNode %in% treeLeaves) {
+		# 	otuName <- tree$tip.label[childNode]
+		# 	otuIndex <- which(colnames(otu.prop) == otuName)[1]
+		# 	weights[,childNode] <- otu.prop[,otuIndex]
+		# }
 
-			print(paste("parent",parentNode,"num NA parent",length(which(is.na(weights[,parentNode]))),"child",childNode,"num NA child",length(which(is.na(weights[,childNode])))))
-		}
 		if (length(which(is.na(weights[,childNode]))) > 0 ) { #if node is all NA, node has not been seen before, and node is a leaf (ie. an OTU)
 			#put OTU abundance in weights
 			otuName <- tree$tip.label[childNode]
@@ -61,6 +67,7 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 			# initialize parentNode with counts of zero
 			weights[,parentNode] <- 0
 		}
+
 
 		# print("new child weights")
 		# print(str(weights[,childNode]))
@@ -93,7 +100,6 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 	colnames(distanceMatrix) <- rownames(otuTable)
 	branchLengths <- tree$edge.length
 
-	#matching branch lengths to weights order - DEBUG
 	branchLengths <- branchLengths[order(tree$edge[,2])]
 	weights <- weights[,which(!is.na(match(colnames(weights),tree$edge[,2])))]
 
@@ -102,7 +108,6 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 
 	for (i in 1:nSamples) {
 		for (j in i:nSamples) {
-
 
 			#remove branch lengths that aren't in either sample
 			comparisonBranchLengths <- branchLengths
@@ -128,10 +133,11 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 			}
 			distanceMatrix[i,j] <- distance
 			distanceMatrix[j,i] <- distance
+
 		}
 	}
 
-	distanceMatrix <- as.matrix(distanceMatrix)
+	#distanceMatrix <- as.matrix(distanceMatrix)
 
 	if(verbose) {	print("done")	}
 
