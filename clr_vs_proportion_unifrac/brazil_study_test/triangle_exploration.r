@@ -81,6 +81,50 @@ writeDistMat <- function(otuFile,treeFile,metaFile,weightedOutFile,informationOu
 }
 
 
+writeDistMatNoPruning <- function(otuFile,treeFile,metaFile,weightedOutFile,informationOutFile) {
+	source("../../GUniFrac_no_tree_pruning.R")
+	source("../../InformationUniFrac_no_tree_pruning.R")
+
+	# read OTU table and format appropriately for input into UniFrac methods
+	brazil.otu.tab <- read.table(otuFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	#remove taxonomy column to make otu count matrix numeric
+	taxonomy <- brazil.otu.tab$taxonomy
+	brazil.otu.tab <- brazil.otu.tab[-length(colnames(brazil.otu.tab))]
+	brazil.otu.tab <- t(as.matrix(brazil.otu.tab))
+
+	#sort taxa from most to least abundant
+	taxaOrder <- rev(order(apply(brazil.otu.tab,2,sum)))
+	taxonomy <- taxonomy[taxaOrder]
+	brazil.otu.tab <- brazil.otu.tab[,taxaOrder]
+
+	# read and root tree (rooted tree is required)
+	brazil.tree <- read.tree(treeFile)
+	brazil.tree <- midpoint(brazil.tree)
+
+	# read metadata
+	MyMeta<- read.table(metaFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	# filter OTU table and metadata so that only samples which appear in both are retained
+	otu_indicies <- match(rownames(MyMeta),rownames(brazil.otu.tab))
+	otu_indicies <- otu_indicies[!is.na(otu_indicies)]
+	brazil.otu.tab <- brazil.otu.tab[otu_indicies,]
+	MyMetaOrdered <- MyMeta[match(rownames(brazil.otu.tab),rownames(MyMeta)),]
+
+	#run IUniFrac and GUniFrac for comparison, puts distance matrix in eUnifrac and gUnifrac
+	gUnifrac <- GUniFracNoPrune(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,1]
+	eUnifrac <- InformationUniFracNoPrune(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,1]
+
+
+	save(brazil.otu.tab,file="processedBrazilTable.dat")
+	save(brazil.tree,file="processedBrazilTree.dat")
+	save(MyMetaOrdered,file="processedBrazilMetadata.dat")
+	write.table(gUnifrac,file=weightedOutFile,sep="\t")
+	write.table(eUnifrac,file=informationOutFile,sep="\t")
+
+}
+
+
 getProcessedPhyloWeightedDistMat <- function(otu,tree,metadata) {
 
 	brazil.otu.tab <- otu_table(otu, taxa_are_rows=FALSE)
@@ -270,6 +314,7 @@ getInvalidTrianglesOneTable <- function(gUnifrac) {
 
 # writeDistMat("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","weightedUnifracDistMat.txt","informationUnifracDistMat.txt")
 
+# writeDistMatNoPruning("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","weightedUnifracDistMat.txt","informationUnifracDistMat.txt")
 
 
 #### READ IN DISTANCE MATRIX ####
