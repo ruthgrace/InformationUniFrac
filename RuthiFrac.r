@@ -10,7 +10,9 @@ library(ape)
 
 getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE,pruneTree=FALSE)  {
 
-	# make sure tree is in correct format (rooted, postorder)
+	if (length(which(is.na(otuTable))) > 0) {
+		stop("OTU count table has NA")
+	}
 
 	if (!is.rooted(tree)) {
 		tree <- midpoint(tree)
@@ -25,6 +27,7 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE,prun
 	# get proportions
 	readsPerSample <- apply(otuTable,1,sum)
 	otu.prop <- otuTable/readsPerSample
+	otu.prop <- as.matrix(otu.prop)
 	rownames(otu.prop) <- rownames(otuTable)
 	colnames(otu.prop) <- colnames(otuTable)
 
@@ -34,7 +37,7 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE,prun
 
 	#cumulative proportional abundance stored in weights
 	#weights <- data.frame(matrix(0,ncol=(length(tree$edge.length) + 1),nrow=nrow(otuTable)))
-	weights <- data.frame(matrix(NA,ncol=(length(tree$edge.length) + 1),nrow=nrow(otuTable)))
+	weights <- matrix(NA,ncol=(length(tree$edge.length) + 1),nrow=nrow(otuTable))
 	#each row is a sample
 	rownames(weights) <- rownames(otuTable)
 	#each column is the abundance weighting for a node in the phylogenetic tree
@@ -56,14 +59,14 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE,prun
 		# 	weights[,childNode] <- otu.prop[,otuIndex]
 		# }
 
-		if (length(which(is.na(weights[,childNode]))) > 0 ) { #if node is all NA, node has not been seen before, and node is a leaf (ie. an OTU)
+		if (is.na(weights[1,childNode])) { #if node is all NA, node has not been seen before, and node is a leaf (ie. an OTU)
 			#put OTU abundance in weights
 			otuName <- tree$tip.label[childNode]
 			otuIndex <- which(colnames(otu.prop) == otuName)[1]
 			weights[,childNode] <- otu.prop[,otuIndex]
 		}
 
-		if (length(which(is.na(weights[,parentNode]))) > 0 ) {
+		if (is.na(weights[1,parentNode])) {
 			# initialize parentNode with counts of zero
 			weights[,parentNode] <- 0
 		}
@@ -90,7 +93,6 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE,prun
 		weights[] <- (-1) * weights[] * log2(weights[])
 		weights <- as.matrix(weights)
 		weights[which(is.na(weights))] <- 0
-		weights <- data.frame(weights,check.names=FALSE)
 	}
 
 
