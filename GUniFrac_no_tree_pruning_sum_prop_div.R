@@ -102,7 +102,7 @@ GUniFracNoPrune <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
 			## this line is rewritten to remove ind
 			mi <- cum.ct[, i] + cum.ct[, j]
 			mt <- row.sum[i] + row.sum[j]			
-			diff <- abs(cum1 - cum2) / (cum1 + cum2)
+			diff <- abs((cum1/sum(cum1)) - (cum2/sum(cum2))) #/ (cum1 + cum2)
 			# get rid of NaN from dividing from zero
 			diff[which(is.nan(diff))] <- 0
 			
@@ -110,8 +110,8 @@ GUniFracNoPrune <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
 			for(k in 1:length(alpha)){
 				#w <- br.len2 * (cum1 + cum2)^alpha[k]
 				## replace br.len2 (pruned) with br.len (unpruned)
-				w <- br.len * (cum1 + cum2)^alpha[k]
-				unifracs[i, j, k] <- unifracs[j, i, k] <- sum(diff * w) / sum(w)
+				w <- br.len #* (cum1 + cum2)^alpha[k]
+				unifracs[i, j, k] <- unifracs[j, i, k] <- sum(diff * w) / (sum(w) * sum(cum1+cum2))
 			}			
 			
 			#	Variance Adjusted UniFrac Distance

@@ -1,6 +1,9 @@
 
 #manually calculating minimum case triangle inequality violation distance matrix
 
+
+
+
 load("minimum_case_for_weighted_triangle_violation.dat")
 
 tree <- minCase$FivePercentSparsityTree

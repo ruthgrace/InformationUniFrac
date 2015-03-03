@@ -139,13 +139,13 @@ InformationUniFracNoPrune <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
 			mi <- cum.ct[, i] + cum.ct[, j]
 			
 			mt <- row.sum[i] + row.sum[j]			
-			diff <- abs(cum1 - cum2) / (cum1 + cum2)	
+			diff <- abs(cum1 - cum2) #/ (cum1 + cum2)	
 			diff[which(is.nan(diff))] <- 0				
 			# Generalized UniFrac distance
 			for(k in 1:length(alpha)){
 				#w <- br.len2 * (cum1 + cum2)^alpha[k]
 				## replace br.len2 (pruned) with br.len (unpruned)
-				w <- br.len * (cum1 + cum2)^alpha[k]
+				w <- br.len #* (cum1 + cum2)^alpha[k]
 				unifracs[i, j, k] <- unifracs[j, i, k] <- sum(diff * w) / sum(w)
 			}			
 			#	Variance Adjusted UniFrac Distance

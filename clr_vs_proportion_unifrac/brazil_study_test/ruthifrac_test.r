@@ -44,9 +44,9 @@ MyMetaOrdered <- MyMeta[match(rownames(brazil.otu.tab),rownames(MyMeta)),]
 
 #run IUniFrac and GUniFrac for comparison, puts distance matrix in eUnifrac and gUnifrac
 calculatedUnifrac <- GUniFrac(brazil.otu.tab, brazil.tree, alpha = c(1))
-gUnweighted <- calculatedUnifrac$unifrac[,,2]
-gWeighted <- calculatedUnifrac$unifrac[,,1]
-gInformation <- InformationUniFrac(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,1]
+gUnweighted <- calculatedUnifrac$unifrac[,,"d_UW"]
+gWeighted <- calculatedUnifrac$unifrac[,,"d_1"]
+gInformation <- InformationUniFrac(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,"d_1"]
 rUnweighted <- getDistanceMatrix(brazil.otu.tab,brazil.tree,method="unweighted",verbose=TRUE)
 rWeighted <- getDistanceMatrix(brazil.otu.tab,brazil.tree,method="weighted",verbose=TRUE)
 rInformation <- getDistanceMatrix(brazil.otu.tab,brazil.tree,method="information",verbose=TRUE)

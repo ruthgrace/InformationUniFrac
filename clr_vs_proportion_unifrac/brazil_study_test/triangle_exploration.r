@@ -81,6 +81,244 @@ writeDistMat <- function(otuFile,treeFile,metaFile,weightedOutFile,informationOu
 }
 
 
+
+
+writeDistMatNoDiv <- function(otuFile,treeFile,metaFile,weightedOutFile,informationOutFile) {
+	source("../../GUniFrac_no_prop_div.R")
+	source("../../InformationUniFrac_no_prop_div.r")
+	# read OTU table and format appropriately for input into UniFrac methods
+	brazil.otu.tab <- read.table(otuFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	#remove taxonomy column to make otu count matrix numeric
+	taxonomy <- brazil.otu.tab$taxonomy
+	brazil.otu.tab <- brazil.otu.tab[-length(colnames(brazil.otu.tab))]
+	brazil.otu.tab <- t(as.matrix(brazil.otu.tab))
+
+	#sort taxa from most to least abundant
+	taxaOrder <- rev(order(apply(brazil.otu.tab,2,sum)))
+	taxonomy <- taxonomy[taxaOrder]
+	brazil.otu.tab <- brazil.otu.tab[,taxaOrder]
+
+	# read and root tree (rooted tree is required)
+	brazil.tree <- read.tree(treeFile)
+	brazil.tree <- midpoint(brazil.tree)
+
+	# read metadata
+	MyMeta<- read.table(metaFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	# filter OTU table and metadata so that only samples which appear in both are retained
+	otu_indicies <- match(rownames(MyMeta),rownames(brazil.otu.tab))
+	otu_indicies <- otu_indicies[!is.na(otu_indicies)]
+	brazil.otu.tab <- brazil.otu.tab[otu_indicies,]
+	MyMetaOrdered <- MyMeta[match(rownames(brazil.otu.tab),rownames(MyMeta)),]
+
+	#run IUniFrac and GUniFrac for comparison, puts distance matrix in eUnifrac and gUnifrac
+	gUnifrac <- GUniFrac(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,1]
+	eUnifrac <- InformationUniFrac(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,1]
+
+
+	save(brazil.otu.tab,file="processedBrazilTable.dat")
+	save(brazil.tree,file="processedBrazilTree.dat")
+	save(MyMetaOrdered,file="processedBrazilMetadata.dat")
+	write.table(gUnifrac,file=weightedOutFile,sep="\t")
+	write.table(eUnifrac,file=informationOutFile,sep="\t")
+
+}
+
+
+
+
+writeRuthifracDistMat <- function(otuFile,treeFile,metaFile,unweightedOutFile,weightedOutFile,informationOutFile) {
+	source("../../RuthiFrac.r")
+
+	# read OTU table and format appropriately for input into UniFrac methods
+	brazil.otu.tab <- read.table(otuFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	#remove taxonomy column to make otu count matrix numeric
+	taxonomy <- brazil.otu.tab$taxonomy
+	brazil.otu.tab <- brazil.otu.tab[-length(colnames(brazil.otu.tab))]
+	brazil.otu.tab <- t(as.matrix(brazil.otu.tab))
+
+	#sort taxa from most to least abundant
+	taxaOrder <- rev(order(apply(brazil.otu.tab,2,sum)))
+	taxonomy <- taxonomy[taxaOrder]
+	brazil.otu.tab <- brazil.otu.tab[,taxaOrder]
+
+	# read and root tree (rooted tree is required)
+	brazil.tree <- read.tree(treeFile)
+	brazil.tree <- midpoint(brazil.tree)
+
+	# read metadata
+	MyMeta<- read.table(metaFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	# filter OTU table and metadata so that only samples which appear in both are retained
+	otu_indicies <- match(rownames(MyMeta),rownames(brazil.otu.tab))
+	otu_indicies <- otu_indicies[!is.na(otu_indicies)]
+	brazil.otu.tab <- brazil.otu.tab[otu_indicies,]
+	MyMetaOrdered <- MyMeta[match(rownames(brazil.otu.tab),rownames(MyMeta)),]
+
+	#run IUniFrac and GUniFrac for comparison, puts distance matrix in eUnifrac and gUnifrac
+	uwUnifrac <- getDistanceMatrix(brazil.otu.tab,brazil.tree,method="unweighted")
+	wUnifrac <- getDistanceMatrix(brazil.otu.tab,brazil.tree,method="weighted")
+	iUnifrac <- getDistanceMatrix(brazil.otu.tab,brazil.tree,method="information")
+
+
+	save(brazil.otu.tab,file="processedRuthBrazilTable.dat")
+	save(brazil.tree,file="processedRuthBrazilTree.dat")
+	save(MyMetaOrdered,file="processedRuthBrazilMetadata.dat")
+	write.table(uwUnifrac,file=unweightedOutFile,sep="\t")
+	write.table(wUnifrac,file=weightedOutFile,sep="\t")
+	write.table(iUnifrac,file=informationOutFile,sep="\t")
+
+}
+
+
+
+writeDistMatNoPruningNoDiv <- function(otuFile,treeFile,metaFile,unweightedOutFile,weightedOutFile,informationOutFile) {
+	source("../../GUniFrac_no_tree_pruning_no_prop_div.R")
+	source("../../InformationUniFrac_no_tree_pruning_no_prop_div.R")
+
+	# read OTU table and format appropriately for input into UniFrac methods
+	brazil.otu.tab <- read.table(otuFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	#remove taxonomy column to make otu count matrix numeric
+	taxonomy <- brazil.otu.tab$taxonomy
+	brazil.otu.tab <- brazil.otu.tab[-length(colnames(brazil.otu.tab))]
+	brazil.otu.tab <- t(as.matrix(brazil.otu.tab))
+
+	#sort taxa from most to least abundant
+	taxaOrder <- rev(order(apply(brazil.otu.tab,2,sum)))
+	taxonomy <- taxonomy[taxaOrder]
+	brazil.otu.tab <- brazil.otu.tab[,taxaOrder]
+
+	# read and root tree (rooted tree is required)
+	brazil.tree <- read.tree(treeFile)
+	brazil.tree <- midpoint(brazil.tree)
+
+	# read metadata
+	MyMeta<- read.table(metaFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	# filter OTU table and metadata so that only samples which appear in both are retained
+	otu_indicies <- match(rownames(MyMeta),rownames(brazil.otu.tab))
+	otu_indicies <- otu_indicies[!is.na(otu_indicies)]
+	brazil.otu.tab <- brazil.otu.tab[otu_indicies,]
+	MyMetaOrdered <- MyMeta[match(rownames(brazil.otu.tab),rownames(MyMeta)),]
+
+	#run IUniFrac and GUniFrac for comparison, puts distance matrix in eUnifrac and gUnifrac
+	calculatedUnifrac <- GUniFracNoPrune(brazil.otu.tab, brazil.tree, alpha = c(1))
+	uwUnifrac <- calculatedUnifrac$unifrac[,,2]
+	wUnifrac <- calculatedUnifrac$unifrac[,,1]
+	iUnifrac <- InformationUniFracNoPrune(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,1]
+
+
+	save(brazil.otu.tab,file="processedBrazilTable_no_pruning.dat")
+	save(brazil.tree,file="processedBrazilTree_no_pruning.dat")
+	save(MyMetaOrdered,file="processedBrazilMetadata_no_pruning.dat")
+	write.table(uwUnifrac,file=unweightedOutFile,sep="\t")
+	write.table(wUnifrac,file=weightedOutFile,sep="\t")
+	write.table(iUnifrac,file=informationOutFile,sep="\t")
+
+}
+
+
+
+writeDistMatNoPruningProperDiv <- function(otuFile,treeFile,metaFile,unweightedOutFile,weightedOutFile,informationOutFile) {
+	source("../../GUniFrac_no_tree_pruning_proper_prop_div.R")
+	source("../../InformationUniFrac_no_tree_pruning_proper_prop_div.R")
+
+	# read OTU table and format appropriately for input into UniFrac methods
+	brazil.otu.tab <- read.table(otuFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	#remove taxonomy column to make otu count matrix numeric
+	taxonomy <- brazil.otu.tab$taxonomy
+	brazil.otu.tab <- brazil.otu.tab[-length(colnames(brazil.otu.tab))]
+	brazil.otu.tab <- t(as.matrix(brazil.otu.tab))
+
+	#sort taxa from most to least abundant
+	taxaOrder <- rev(order(apply(brazil.otu.tab,2,sum)))
+	taxonomy <- taxonomy[taxaOrder]
+	brazil.otu.tab <- brazil.otu.tab[,taxaOrder]
+
+	# read and root tree (rooted tree is required)
+	brazil.tree <- read.tree(treeFile)
+	brazil.tree <- midpoint(brazil.tree)
+
+	# read metadata
+	MyMeta<- read.table(metaFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	# filter OTU table and metadata so that only samples which appear in both are retained
+	otu_indicies <- match(rownames(MyMeta),rownames(brazil.otu.tab))
+	otu_indicies <- otu_indicies[!is.na(otu_indicies)]
+	brazil.otu.tab <- brazil.otu.tab[otu_indicies,]
+	MyMetaOrdered <- MyMeta[match(rownames(brazil.otu.tab),rownames(MyMeta)),]
+
+	#run IUniFrac and GUniFrac for comparison, puts distance matrix in eUnifrac and gUnifrac
+	calculatedUnifrac <- GUniFracNoPrune(brazil.otu.tab, brazil.tree, alpha = c(1))
+	uwUnifrac <- calculatedUnifrac$unifrac[,,2]
+	wUnifrac <- calculatedUnifrac$unifrac[,,1]
+	iUnifrac <- InformationUniFracNoPrune(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,1]
+
+
+	save(brazil.otu.tab,file="processedBrazilTable_no_pruning.dat")
+	save(brazil.tree,file="processedBrazilTree_no_pruning.dat")
+	save(MyMetaOrdered,file="processedBrazilMetadata_no_pruning.dat")
+	write.table(uwUnifrac,file=unweightedOutFile,sep="\t")
+	write.table(wUnifrac,file=weightedOutFile,sep="\t")
+	write.table(iUnifrac,file=informationOutFile,sep="\t")
+
+}
+
+
+
+writeDistMatNoPruningSumDiv <- function(otuFile,treeFile,metaFile,unweightedOutFile,weightedOutFile,informationOutFile) {
+	source("../../GUniFrac_no_tree_pruning_sum_prop_div.R")
+	source("../../InformationUniFrac_no_tree_pruning_sum_prop_div.R")
+
+	# read OTU table and format appropriately for input into UniFrac methods
+	brazil.otu.tab <- read.table(otuFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	#remove taxonomy column to make otu count matrix numeric
+	taxonomy <- brazil.otu.tab$taxonomy
+	brazil.otu.tab <- brazil.otu.tab[-length(colnames(brazil.otu.tab))]
+	brazil.otu.tab <- t(as.matrix(brazil.otu.tab))
+
+	#sort taxa from most to least abundant
+	taxaOrder <- rev(order(apply(brazil.otu.tab,2,sum)))
+	taxonomy <- taxonomy[taxaOrder]
+	brazil.otu.tab <- brazil.otu.tab[,taxaOrder]
+
+	# read and root tree (rooted tree is required)
+	brazil.tree <- read.tree(treeFile)
+	brazil.tree <- midpoint(brazil.tree)
+
+	# read metadata
+	MyMeta<- read.table(metaFile, header=T, sep="\t", row.names=1, comment.char="", check.names=FALSE)
+
+	# filter OTU table and metadata so that only samples which appear in both are retained
+	otu_indicies <- match(rownames(MyMeta),rownames(brazil.otu.tab))
+	otu_indicies <- otu_indicies[!is.na(otu_indicies)]
+	brazil.otu.tab <- brazil.otu.tab[otu_indicies,]
+	MyMetaOrdered <- MyMeta[match(rownames(brazil.otu.tab),rownames(MyMeta)),]
+
+	#run IUniFrac and GUniFrac for comparison, puts distance matrix in eUnifrac and gUnifrac
+	calculatedUnifrac <- GUniFracNoPrune(brazil.otu.tab, brazil.tree, alpha = c(1))
+	uwUnifrac <- calculatedUnifrac$unifrac[,,2]
+	wUnifrac <- calculatedUnifrac$unifrac[,,1]
+	iUnifrac <- InformationUniFracNoPrune(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,1]
+
+
+	save(brazil.otu.tab,file="processedBrazilTable_no_pruning.dat")
+	save(brazil.tree,file="processedBrazilTree_no_pruning.dat")
+	save(MyMetaOrdered,file="processedBrazilMetadata_no_pruning.dat")
+	write.table(uwUnifrac,file=unweightedOutFile,sep="\t")
+	write.table(wUnifrac,file=weightedOutFile,sep="\t")
+	write.table(iUnifrac,file=informationOutFile,sep="\t")
+
+}
+
+
+
+
 writeDistMatNoPruning <- function(otuFile,treeFile,metaFile,weightedOutFile,informationOutFile) {
 	source("../../GUniFrac_no_tree_pruning.R")
 	source("../../InformationUniFrac_no_tree_pruning.R")
@@ -116,9 +354,9 @@ writeDistMatNoPruning <- function(otuFile,treeFile,metaFile,weightedOutFile,info
 	eUnifrac <- InformationUniFracNoPrune(brazil.otu.tab, brazil.tree, alpha = c(1))$unifrac[,,1]
 
 
-	save(brazil.otu.tab,file="processedBrazilTable.dat")
-	save(brazil.tree,file="processedBrazilTree.dat")
-	save(MyMetaOrdered,file="processedBrazilMetadata.dat")
+	save(brazil.otu.tab,file="processedBrazilTable_no_pruning_no_prop_div.dat")
+	save(brazil.tree,file="processedBrazilTree_no_pruning_no_prop_div.dat")
+	save(MyMetaOrdered,file="processedBrazilMetadata_no_pruning_no_prop_div.dat")
 	write.table(gUnifrac,file=weightedOutFile,sep="\t")
 	write.table(eUnifrac,file=informationOutFile,sep="\t")
 
@@ -239,6 +477,35 @@ getProcessedDistMat <- function(otu,tree,metadata) {
 }
 
 
+writeAllInvalidTriangles <- function(uwUnifrac,wUnifrac,iUnifrac,fileName) {
+	samples <- rownames(uwUnifrac)
+
+	fail <- list()
+	unweightedText <- "unweighted"
+	weightedText <- "weighted"
+	informationText <- "information"
+
+	columnNames <- c(paste("index",c(1:3),sep=""),"dist12","dist23","dist13","difference")
+
+	fail$unweightedText <- data.frame(matrix(ncol=7,nrow=0))
+	colnames(fail$unweightedText) <- columnNames
+	fail$weightedText <- data.frame(matrix(ncol=7,nrow=0))
+	colnames(fail$weightedText) <- columnNames
+	fail$informationText <- data.frame(matrix(ncol=7,nrow=0))
+	colnames(fail$informationText) <- columnNames
+
+
+	triangles <- combn(c(1:length(samples)),3)
+	fail$weightedText <- triangleTest(triangles,uwUnifrac,fail$weightedText)
+
+	fail$weightedText <- triangleTest(triangles,wUnifrac,fail$weightedText)
+
+	fail$informationText <- triangleTest(triangles,iUnifrac,fail$informationText)
+
+	save(fail,file=fileName)
+
+}
+
 
 
 
@@ -314,18 +581,61 @@ getInvalidTrianglesOneTable <- function(gUnifrac) {
 
 # writeDistMat("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","weightedUnifracDistMat.txt","informationUnifracDistMat.txt")
 
-# writeDistMatNoPruning("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","weightedUnifracDistMat.txt","informationUnifracDistMat.txt")
+writeDistMatNoDiv("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","weightedUnifracDistMat_no_prop_div.txt","informationUnifracDistMat_no_prop_div.txt")
 
+
+# writeDistMatNoPruning("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","weightedUnifracDistMat_no_pruning.txt","informationUnifracDistMat_no_pruning.txt")
+
+# writeRuthifracDistMat("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","unweightedRuthifracDistMat.txt","weightedRuthifracDistMat.txt","informationRuthifracDistMat.txt")
+
+# writeDistMatNoPruningNoDiv("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","unweightedUnifracDistMat_no_pruning_no_prop_div.txt","weightedUnifracDistMat_no_pruning_no_prop_div.txt","informationUnifracDistMat_no_pruning_no_prop_div.txt")
+
+writeDistMatNoPruningProperDiv("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","unweightedUnifracDistMat_no_pruning_proper_prop_div.txt","weightedUnifracDistMat_no_pruning_proper_prop_div.txt","informationUnifracDistMat_no_pruning_proper_prop_div.txt")
+
+writeDistMatNoPruningSumDiv("./brazil_study_data/td_OTU_tag_mapped_RDPlineage_blastcorrected_vvcfilter_tempgenera.txt","./brazil_study_data/fasttree_all_seed_OTUs.tre","./brazil_study_data/metadata_BVsamplesonly.txt","unweightedUnifracDistMat_no_pruning_sum_prop_div.txt","weightedUnifracDistMat_no_pruning_sum_prop_div.txt","informationUnifracDistMat_no_pruning_sum_prop_div.txt")
 
 #### READ IN DISTANCE MATRIX ####
 
 gUnifrac <- read.table("weightedUnifracDistMat.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
 eUnifrac <- read.table("informationUnifracDistMat.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
 
+gUnifrac <- read.table("weightedUnifracDistMat_no_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+eUnifrac <- read.table("informationUnifracDistMat_no_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+
+
+# gUnifrac <- read.table("weightedUnifracDistMat_no_pruning.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+# eUnifrac <- read.table("informationUnifracDistMat_no_pruning.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+
+# uwUnifrac <- read.table("unweightedRuthifracDistMat.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+# wUnifrac <- read.table("weightedRuthifracDistMat.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+# iUnifrac <- read.table("informationRuthifracDistMat.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+
+# uwUnifrac <- read.table("unweightedUnifracDistMat_no_pruning_no_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+# wUnifrac <- read.table("weightedUnifracDistMat_no_pruning_no_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+# iUnifrac <- read.table("informationUnifracDistMat_no_pruning_no_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+
+# uwUnifrac <- read.table("unweightedUnifracDistMat_no_pruning_no_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+# wUnifrac <- read.table("weightedUnifracDistMat_no_pruning_no_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+# iUnifrac <- read.table("informationUnifracDistMat_no_pruning_no_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+
+uwUnifrac <- read.table("unweightedUnifracDistMat_no_pruning_proper_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+wUnifrac <- read.table("weightedUnifracDistMat_no_pruning_proper_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+iUnifrac <- read.table("informationUnifracDistMat_no_pruning_proper_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+
+uwUnifrac <- read.table("unweightedUnifracDistMat_no_pruning_sum_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+wUnifrac <- read.table("weightedUnifracDistMat_no_pruning_sum_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+iUnifrac <- read.table("informationUnifracDistMat_no_pruning_sum_prop_div.txt",sep="\t",quote="",check.names=FALSE,header=TRUE,row.names=1)
+
+
 #### CALCULATE ALL TRIANGLES ####
 
 writeInvalidTriangles(gUnifrac,eUnifrac,"invalid_triangles.dat")
+writeInvalidTriangles(gUnifrac,eUnifrac,"invalid_triangles_no_prop_div.dat")
 
+# writeAllInvalidTriangles(uwUnifrac,wUnifrac,iUnifrac,"invalid_Ruthifrac_triangles.dat")
+# writeAllInvalidTriangles(uwUnifrac,wUnifrac,iUnifrac,"invalid_GUnifrac_no_pruning_no_prop_div_triangles.dat")
+# writeAllInvalidTriangles(uwUnifrac,wUnifrac,iUnifrac,"invalid_GUnifrac_no_pruning_proper_prop_div_triangles.dat")
+# writeAllInvalidTriangles(uwUnifrac,wUnifrac,iUnifrac,"invalid_GUnifrac_no_pruning_proper_sum_div_triangles.dat")
 
 #### EXPLORE PROBLEMATIC SAMPLES ####
 
@@ -392,8 +702,24 @@ histogram <- hist(sampleNums,breaks=c(1:numSamples))
 
 
 #### MAKE MINIMAL INVALID TRIANGLE CASE ####
+load("invalid_triangles.dat")
+load("processedBrazilTable.dat")
+load("processedBrazilTree.dat")
 
+biggestFail <- fail$weighted[which(fail$weighted$difference == max(fail$weighted$difference)),]
 
+minCase <- list()
+minCase$samples <- brazil.otu.tab[c(biggestFail$index1,biggestFail$index2,biggestFail$index3),]
+minCase$tree <- brazil.tree
+minCase$distMat <- GUniFrac(minCase$samples,minCase$tree,alpha=c(1))$unifracs[,,"d_1"]
+otuSums <- apply(minCase$samples,2,sum)
+totalReads <- sum(minCase$samples)
+minCase$OnePercentSparsitySamples <- minCase$samples[,which(otuSums >= (0.01*totalReads))]
+
+absentOTUs <- minCase$tree$tip.label[!(minCase$tree$tip.label %in% colnames(minCase$OnePercentSparsitySamples))]
+minCase$OnePercentSparsityTree <- drop.tip(minCase$tree, absentOTUs)
+
+save(minCase,file = "min_invalid_triangle_case.dat")
 
 # #### TRY DROPPING TIPS FROM TREE TO SEE IF NUMBER OF INVALID TRIANGLES DECREASE ####
 
@@ -440,9 +766,9 @@ histogram <- hist(sampleNums,breaks=c(1:numSamples))
 
 #### TRY USING PHYLOSEQ UNIFRAC METHOD ####
 
-# load("processedBrazilTable.dat")
-# load("processedBrazilTreeForPhylo.dat")
-# load("processedBrazilMetadata.dat")
+load("processedBrazilTable.dat")
+load("processedBrazilTreeForPhylo.dat")
+load("processedBrazilMetadata.dat")
 
 print("test")
 

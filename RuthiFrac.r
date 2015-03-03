@@ -8,7 +8,7 @@ library(ape)
 
 #valid methods are unweighted, weighted, information. Any other method will result in a warning and the unweighted analysis
 
-getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
+getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE,pruneTree=FALSE)  {
 
 	# make sure tree is in correct format (rooted, postorder)
 
@@ -102,26 +102,27 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 
 	branchLengths <- branchLengths[order(tree$edge[,2])]
 	weights <- weights[,which(!is.na(match(colnames(weights),tree$edge[,2])))]
-
+	
+	if(pruneTree==FALSE) {
+		branchLengths <- branchLengths/sum(branchLengths)
+	}
 
 	if(verbose) {	print("calculating pairwise distances...")	}
 
 	for (i in 1:nSamples) {
 		for (j in i:nSamples) {
 
-			#remove branch lengths that aren't in either sample
-			comparisonBranchLengths <- branchLengths
-			excludeBranchLengths <- which( (weights[i,] <= 0) & (weights[j,] <= 0) )
-			comparisonBranchLengths[excludeBranchLengths] <- 0
-
-			#turn branch lengths into proportions
-			totalBranchLength <- sum(comparisonBranchLengths)
-			comparisonBranchLengths <- comparisonBranchLengths/totalBranchLength
-
-			if (method=="weighted" || method=="information") {
-				# the formula is sum of (branch lengths * | proportional abundance for sample A - proportional abundance for sample B| )
-				distance <- sum( comparisonBranchLengths * abs(weights[i,] - weights[j,]) )
-			}
+				if (method=="weighted" || method=="information") {
+					# the formula is sum of (proportional branch lengths * | proportional abundance for sample A - proportional abundance for sample B| )
+					if (pruneTree==TRUE){
+						includeBranchLengths <- which( (weights[i,] > 0) | (weights[j,] > 0) )
+						distance <- sum( branchLengths[includeBranchLengths] * abs(weights[i,includeBranchLengths] - weights[j,includeBranchLengths]) )/sum( branchLengths[includeBranchLengths])
+					}
+					else {
+						distance <- sum( branchLengths * abs(weights[i,] - weights[j,]) )
+					}
+					
+				}
 			else {
 				if (method!="unweighted") {
 					warning(paste("Invalid method",method,", using unweighted Unifrac"))
@@ -129,7 +130,13 @@ getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE)  {
 				# the formula is sum of (branch lengths * (1 if one sample has counts and not the other, 0 otherwise) )
 				#	i call the (1 if one sample has counts and not the other, 0 otherwise) xorBranchLength
 				xorBranchLength <- as.numeric(xor( weights[i,] > 0, weights[j,] > 0))
-				distance <- sum( comparisonBranchLengths *  xorBranchLength)
+				if (pruneTree==TRUE) {
+					distance <- sum( branchLengths[includeBranchLengths] *  xorBranchLength[includeBranchLengths])/sum(branchLengths[includeBranchLengths])
+				}
+				else {
+					distance <- sum( branchLengths *  xorBranchLength)
+				}
+				
 			}
 			distanceMatrix[i,j] <- distance
 			distanceMatrix[j,i] <- distance

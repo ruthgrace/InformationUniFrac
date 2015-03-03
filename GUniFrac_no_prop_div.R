@@ -12,7 +12,7 @@ require(ade4)
 require(ape)
 require(vegan)
 
-GUniFracNoPrune <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
+GUniFrac <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
 	# Calculate Generalized UniFrac distances. Unweighted and 
 	# Variance-adjusted UniFrac distances will also be returned.
 	#	
@@ -92,50 +92,31 @@ GUniFracNoPrune <- function (otu.tab, tree, alpha = c(0, 0.5, 1)) {
 		for (j in 1:(i-1)) {
 			cum1 <- cum[, i]
 			cum2 <- cum[, j]
-			## this is the pruning part, which i've commented out
-			# ind <- (cum1 + cum2) != 0
-			# cum1 <- cum1[ind]
-			# cum2 <- cum2[ind]		
-			# br.len2 <- br.len[ind]			
-			# mi <- cum.ct[ind, i] + cum.ct[ind, j]
-
-			## this line is rewritten to remove ind
-			mi <- cum.ct[, i] + cum.ct[, j]
+			ind <- (cum1 + cum2) != 0
+			cum1 <- cum1[ind]
+			cum2 <- cum2[ind]		
+			br.len2 <- br.len[ind]			
+			mi <- cum.ct[ind, i] + cum.ct[ind, j]
 			mt <- row.sum[i] + row.sum[j]			
-			diff <- abs(cum1 - cum2) / (cum1 + cum2)
-			# get rid of NaN from dividing from zero
-			diff[which(is.nan(diff))] <- 0
+			diff <- abs(cum1 - cum2) #/ (cum1 + cum2)		
 			
 			# Generalized UniFrac distance
 			for(k in 1:length(alpha)){
-				#w <- br.len2 * (cum1 + cum2)^alpha[k]
-				## replace br.len2 (pruned) with br.len (unpruned)
-				w <- br.len * (cum1 + cum2)^alpha[k]
+				w <- br.len2 #* (cum1 + cum2)^alpha[k]
 				unifracs[i, j, k] <- unifracs[j, i, k] <- sum(diff * w) / sum(w)
 			}			
 			
 			#	Variance Adjusted UniFrac Distance
 			ind2 <- (mt != mi)
-			#w <- br.len2 * (cum1 + cum2) / sqrt(mi * (mt - mi))
-			## replace br.len2 (pruned) with br.len (unpruned)
-			w <- br.len * (cum1 + cum2) / sqrt(mi * (mt - mi))
+			w <- br.len2 * (cum1 + cum2) / sqrt(mi * (mt - mi))
 			unifracs[i, j, (k + 2)] <- unifracs[j, i, (k + 2)] <- 
 					sum(diff[ind2] * w[ind2]) / sum(w[ind2])		
 			
 			#	Unweighted UniFrac Distance
 			cum1 <- (cum1 != 0)
 			cum2 <- (cum2 != 0)			
-			#unifracs[i, j, (k + 1)] <- unifracs[j, i, (k + 1)] <- 
-			#		sum(abs(cum1 - cum2) / (cum1 + cum2) * br.len2) / sum(br.len2)
-			## replace br.len2 (pruned) with br.len (unpruned)
-			calculation <-abs(cum1 - cum2) / (cum1 + cum2)
-			# get rid of NaN from dividing from zero
-			calculation[which(is.nan(calculation))] <- 0
-			
 			unifracs[i, j, (k + 1)] <- unifracs[j, i, (k + 1)] <- 
-					sum(calculation * br.len) / sum(br.len)
-			
-
+					sum(abs(cum1 - cum2) / (cum1 + cum2) * br.len2) / sum(br.len2)
 		}
 	}
 	return(list(unifracs=unifracs))
