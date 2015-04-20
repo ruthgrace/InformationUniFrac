@@ -180,8 +180,8 @@ getDataSetSep <- function(otu,groups,tree) {
 	#take in otu table, rows are samples, cols are OTUs
 	# return list of 1) unweighted UniFrac 2) weighted UniFrac 3) iUniFrac
 	unifrac <- GUniFrac(otu, tree, alpha = c(1))
-	uwUnifrac <- unifrac$unifrac[,,1]
-	wUnifrac <- unifrac$unifrac[,,3]
+	uwUnifrac <- unifrac$unifrac[,,2]
+	wUnifrac <- unifrac$unifrac[,,1]
 	eUnifrac <- InformationUniFrac(otu, tree, alpha = c(1))$unifrac[,,1]
 
 	uwUnifrac.pcoa <- pcoa(uwUnifrac)
@@ -199,8 +199,8 @@ getDataSetSep <- function(otu,groups,tree) {
 
 getAllPcoaMetrics <- function(otu,groups,tree) {
 	unifrac <- GUniFrac(otu, tree, alpha = c(1))
-	uwUnifrac <- unifrac$unifrac[,,1]
-	wUnifrac <- unifrac$unifrac[,,3]
+	uwUnifrac <- unifrac$unifrac[,,2]
+	wUnifrac <- unifrac$unifrac[,,1]
 	eUnifrac <- InformationUniFrac(otu, tree, alpha = c(1))$unifrac[,,1]
 
 	uwUnifrac.pcoa <- pcoa(uwUnifrac)

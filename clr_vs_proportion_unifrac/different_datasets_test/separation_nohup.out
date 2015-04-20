@@ -1,0 +1,81 @@
+Warning message:
+package ‘ape’ was built under R version 3.1.2 
+Warning message:
+package ‘phangorn’ was built under R version 3.1.3 
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.2-1
+
+Attaching package: ‘vegan’
+
+The following objects are masked from ‘package:phangorn’:
+
+    diversity, treedist
+
+Warning messages:
+1: package ‘vegan’ was built under R version 3.1.2 
+2: package ‘lattice’ was built under R version 3.1.3 
+Loading required package: ade4
+
+Attaching package: ‘ade4’
+
+The following object is masked from ‘package:vegan’:
+
+    cca
+
+[1] "length of comparisonList 3"
+[1] "comparison list 1"
+[1] 1
+[1] "comparison list 2"
+[1] 2
+[1] "comparison list 3"
+[1] 3
+pdf 
+  2 
+There were 50 or more warnings (use warnings() to see the first 50)
+[1] "length of comparisonList 3"
+[1] "comparison list 1"
+[1] 1 2
+[1] "comparison list 2"
+[1] 1 3
+[1] "comparison list 3"
+[1] 2 3
+pdf 
+  2 
+There were 50 or more warnings (use warnings() to see the first 50)
+[1] "length of comparisonList 3"
+[1] "comparison list 1"
+[1] 1
+[1] "comparison list 2"
+[1] 2
+[1] "comparison list 3"
+[1] 3
+pdf 
+  2 
+There were 50 or more warnings (use warnings() to see the first 50)
+[1] "length of comparisonList 3"
+[1] "comparison list 1"
+[1] 1 2
+[1] "comparison list 2"
+[1] 1 3
+[1] "comparison list 3"
+[1] 2 3
+pdf 
+  2 
+There were 50 or more warnings (use warnings() to see the first 50)
+[1] "length of comparisonList 2"
+[1] "comparison list 1"
+[1] 1
+[1] "comparison list 2"
+[1] 2
+pdf 
+  2 
+There were 48 warnings (use warnings() to see them)
+[1] "length of comparisonList 2"
+[1] "comparison list 1"
+[1] 1 2
+[1] "comparison list 2"
+[1] 2 1
+pdf 
+  2 
+There were 48 warnings (use warnings() to see them)

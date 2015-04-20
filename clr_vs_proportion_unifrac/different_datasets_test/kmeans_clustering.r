@@ -79,10 +79,18 @@ med.otu <- med.otu.unordered[,taxaOrder]
 taxaOrder <- rev(order(apply(high.otu.unordered,2,sum)))
 high.otu <- high.otu.unordered[,taxaOrder]
 
+low.unifrac <- GUniFrac(low.otu, low.tree, alpha = c(1))
+low.uwUnifrac <- low.unifrac$unifrac[,,2]
+low.wUnifrac <- low.unifrac$unifrac[,,1]
+low.eUnifrac <- InformationUniFrac(low.otu, low.tree, alpha = c(1))$unifrac[,,1]
 
-low.uwUnifrac <- read.table(paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
-low.wUnifrac <- read.table(paste("low_sequencing_depth","weighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
-low.eUnifrac <- read.table(paste("low_sequencing_depth","entropy_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+write.table(low.uwUnifrac,file=paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+write.table(low.wUnifrac,file=paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+write.table(low.eUnifrac,file=paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+
+# low.uwUnifrac <- read.table(paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+# low.wUnifrac <- read.table(paste("low_sequencing_depth","weighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+# low.eUnifrac <- read.table(paste("low_sequencing_depth","entropy_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
 
 low.uwUnifrac.pcoa <- pcoa(low.uwUnifrac)
 low.wUnifrac.pcoa <- pcoa(low.wUnifrac)
@@ -93,10 +101,18 @@ low.uwUnifrac.pcoa <- low.uwUnifrac.pcoa$vectors
 low.wUnifrac.pcoa <- low.wUnifrac.pcoa$vectors
 low.eUnifrac.pcoa <- low.eUnifrac.pcoa$vectors
 
+med.unifrac <- GUniFrac(med.otu, med.tree, alpha = c(1))
+med.uwUnifrac <- med.unifrac$unifrac[,,2]
+med.wUnifrac <- med.unifrac$unifrac[,,1]
+med.eUnifrac <- InformationUniFrac(med.otu, med.tree, alpha = c(1))$unifrac[,,1]
 
-med.uwUnifrac <- read.table(paste("med_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
-med.wUnifrac <- read.table(paste("med_sequencing_depth","weighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
-med.eUnifrac <- read.table(paste("med_sequencing_depth","entropy_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+write.table(med.uwUnifrac,file=paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+write.table(med.wUnifrac,file=paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+write.table(med.eUnifrac,file=paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+
+# med.uwUnifrac <- read.table(paste("med_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+# med.wUnifrac <- read.table(paste("med_sequencing_depth","weighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
+# med.eUnifrac <- read.table(paste("med_sequencing_depth","entropy_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
 
 med.uwUnifrac.pcoa <- pcoa(med.uwUnifrac)
 med.wUnifrac.pcoa <- pcoa(med.wUnifrac)
@@ -107,6 +123,14 @@ med.uwUnifrac.pcoa <- med.uwUnifrac.pcoa$vectors
 med.wUnifrac.pcoa <- med.wUnifrac.pcoa$vectors
 med.eUnifrac.pcoa <- med.eUnifrac.pcoa$vectors
 
+high.unifrac <- GUniFrac(high.otu, high.tree, alpha = c(1))
+high.uwUnifrac <- high.unifrac$unifrac[,,2]
+high.wUnifrac <- high.unifrac$unifrac[,,1]
+high.eUnifrac <- InformationUniFrac(high.otu, high.tree, alpha = c(1))$unifrac[,,1]
+
+write.table(high.uwUnifrac,file=paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+write.table(high.wUnifrac,file=paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
+write.table(high.eUnifrac,file=paste("low_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",quote=FALSE)
 
 high.uwUnifrac <- read.table(paste("high_sequencing_depth","unweighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)
 high.wUnifrac <- read.table(paste("high_sequencing_depth","weighted_distance.mat",sep="_"),sep="\t",header=TRUE,row.names=1)

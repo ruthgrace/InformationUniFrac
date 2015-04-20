@@ -79,7 +79,7 @@ runMixedReplicate <- function(otu1,otu2,groups1,groups2,tree,nSamples) {
 	if (ncol(group1.rand)!=ncol(group2.rand)) {
 		mixedOTUs <- addDisimilarOTUs(group1.rand,group2.rand,tree)
 		group1.rand <- mixedOTUs[[1]]
-		gropu2.rand <- mixedOTUs[[2]]
+		group2.rand <- mixedOTUs[[2]]
 	}
 
 	#concatenate
@@ -193,7 +193,7 @@ getReplicate <- function(replicateMethod,otu1,group1,tree,plotTitle,nSamples,gro
 	par(mar=c(13, 4, 4, 2) + 0.1)
 	par(cex.lab=1.3)
 	par(cex.main=1.5)
-	stripchart(plot.data,vertical=TRUE,main="Sparsity filter at 0.1%",group.names=colnames(plot.data),pch=19,col=transparentdarkorchid,las=2,ylab="Effect size")
+	stripchart(plot.data,vertical=TRUE,main=plotTitle,group.names=colnames(plot.data),pch=19,col=transparentdarkorchid,las=2,ylab="Effect size")
 	par(originalPar)
 
 	#mean separation with standard deviation plot (averaged over 5 replicates .....)
@@ -201,7 +201,7 @@ getReplicate <- function(replicateMethod,otu1,group1,tree,plotTitle,nSamples,gro
 
 	meanDist <- unlist(lapply(dist,mean))
 	meanSd <- unlist(lapply(sd,mean))
-	myBarPlot <- barplot(meanDist,col=transparentdarkorchid,las=2,ylim=c(0,1.2),ylab="Difference between mean positions on\nfirst PCoA component between groups",main="Sparsity filter at 0.1%")
+	myBarPlot <- barplot(meanDist,col=transparentdarkorchid,las=2,ylim=c(0,1.2),ylab="Difference between mean positions on\nfirst PCoA component between groups",main=plotTitle)
 	segments(myBarPlot, meanDist - meanSd, myBarPlot, meanDist + meanSd, lwd=2)
 	segments(myBarPlot - 0.1, meanDist - meanSd, myBarPlot + 0.1, meanDist - meanSd, lwd=2)
 	segments(myBarPlot - 0.1, meanDist + meanSd, myBarPlot + 0.1, meanDist + meanSd, lwd=2)
@@ -211,7 +211,7 @@ getReplicate <- function(replicateMethod,otu1,group1,tree,plotTitle,nSamples,gro
 	par(mar=c(12, 6, 4, 2) + 0.1)
 	screePlotData <- apply(scree,2,mean)
 	screePlotError <- apply(scree,2,sd)
-	myBarPlot <- barplot(screePlotData,col=transparentdarkorchid,las=2,ylim=c(0,1),ylab="Variation explained by each axis of PCoA",main="Sparsity filter at 0.1%")
+	myBarPlot <- barplot(screePlotData,col=transparentdarkorchid,las=2,ylim=c(0,1),ylab="Variation explained by each axis of PCoA",main=plotTitle)
 	segments(myBarPlot, screePlotData - screePlotError, myBarPlot, screePlotData + screePlotError, lwd=2)
 	segments(myBarPlot - 0.1, screePlotData - screePlotError, myBarPlot + 0.1, screePlotData - screePlotError, lwd=2)
 	segments(myBarPlot - 0.1, screePlotData + screePlotError, myBarPlot + 0.1, screePlotData + screePlotError, lwd=2)
@@ -259,7 +259,7 @@ high.tree <- rootTree(high.tree)
 
 #source("../../CLRUniFrac.R")
 source("../../GUniFrac.R")
-source("../../InformationUniFrac.R")
+source("../../InformationUniFrac_original.r")
 #source("../../CLRDirichletUniFrac.R")
 
 #format otu table for input into unifrac methods (rownames are samples, colnames are OTUs)

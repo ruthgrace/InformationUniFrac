@@ -11,9 +11,7 @@ plotParameters <- par()
 
 
 #this weightedUnifrac script was ripped straight from the weightedUnifrac package, with no changes.
-source("../../GUnifrac.R")
-
-source("../../InformationUniFrac.R")
+source("../../Ruthifrac.R")
 
 
 # read OTU table and format appropriately for input into UniFrac methods
@@ -46,12 +44,9 @@ breastmilk.otu.tab <- breastmilk.otu.tab[otu_indicies,]
 MyMetaOrdered <- MyMeta[match(rownames(breastmilk.otu.tab),rownames(MyMeta)),]
 
 
-#run CLRUniFrac and weightedUnifrac for comparison, puts distance matrix in unweightedUnifrac and weightedUnifrac
-calculatedUnifrac <- GUniFrac(breastmilk.otu.tab, breastmilk.tree, alpha = c(1))
-unweightedUnifrac <- calculatedUnifrac$unifrac[,,2]
-weightedUnifrac <- calculatedUnifrac$unifrac[,,1]
-eUnifrac <- InformationUniFrac(breastmilk.otu.tab, breastmilk.tree, alpha = c(1))$unifrac[,,1]
-#clrDirichletUniFrac <- CLRDirichletUniFrac(breastmilk.otu.tab, breastmilk.tree, alpha = c(1))$unifrac[,,1]
+unweightedUnifrac <- getDistanceMatrix(breastmilk.otu.tab,breastmilk.tree,method="unweighted",verbose=TRUE,pruneTree=TRUE,normalize=TRUE)
+weightedUnifrac <- getDistanceMatrix(breastmilk.otu.tab,breastmilk.tree,method="weighted",verbose=TRUE,pruneTree=TRUE,normalize=TRUE)
+eUnifrac <- getDistanceMatrix(breastmilk.otu.tab,breastmilk.tree,method="information",verbose=TRUE,pruneTree=TRUE,normalize=TRUE)
 
 #conditions (bv - bacterial vaginosis as scored by nugent/amsel, i - intermediate, n - normal/healthy)
 # groups <- MyMetaOrdered$Gestation #levels ""    "G"   "P_a" "P_b" "T" 
@@ -119,7 +114,7 @@ eUnifrac.pc1.varEx <- sd(eUnifrac.pcoa$vector[,1])*sd(eUnifrac.pcoa$vector[,1])/
 eUnifrac.pc2.varEx <- sd(eUnifrac.pcoa$vector[,2])*sd(eUnifrac.pcoa$vector[,2])/eUnifrac.varExplained
 
 #save plots as PDF
-pdf("camilla_breastmilk_pcoa_plots_infected.pdf")
+pdf("camilla_breastmilk_ruthifrac_plots.pdf")
 
 
 # MAKE BAR PLOTS

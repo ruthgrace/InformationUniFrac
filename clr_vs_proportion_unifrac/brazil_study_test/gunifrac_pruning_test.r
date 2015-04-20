@@ -100,7 +100,8 @@ splittaxa <- strsplit(levels(taxonomyGroups),split=";")
 
 for (i in 1:length(splittaxa)) {
 	if (length(splittaxa[[i]])>1) {
-		newLevels[i] <- paste(splittaxa[[i]][length(splittaxa[[i]])-2],splittaxa[[i]][length(splittaxa[[i]])-1],splittaxa[[i]][length(splittaxa[[i]])])
+		#newLevels[i] <- paste(splittaxa[[i]][length(splittaxa[[i]])-2],splittaxa[[i]][length(splittaxa[[i]])-1],splittaxa[[i]][length(splittaxa[[i]])])
+		newLevels[i] <- splittaxa[[i]][length(splittaxa[[i]])-2]
 	}
 	else {
 		newLevels[i] <- splittaxa[[i]][1]
@@ -156,13 +157,13 @@ gInformation_prune.vector <- unlist(gInformation_prune[lower.tri(gInformation_pr
 pdf("GUnifrac_tree_pruning_test_plots.pdf")
 
 #plot pcoa plots
-
 plot(gUnweighted_prune.pcoa$vectors[,1],gUnweighted_prune.pcoa$vectors[,2], col=groups,main="Unweighted GUniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(gUnweighted_prune.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(gUnweighted_prune.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
-legend(0,0,levels(taxonomyGroups),col=palette(),pch=19)
+legend(0.06,-0.11,levels(taxonomyGroups),col=palette(),pch=19,xpd=TRUE)
 plot(gWeighted_prune.pcoa$vectors[,1],gWeighted_prune.pcoa$vectors[,2], col=groups,main="Weighted GUniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(gWeighted_prune.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(gWeighted_prune.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
 plot(gInformation_prune.pcoa$vectors[,1],gInformation_prune.pcoa$vectors[,2], col=groups,main="Information GUniFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(gInformation_prune.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(gInformation_prune.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
 
 plot(gUnweighted.pcoa$vectors[,1],gUnweighted.pcoa$vectors[,2], col=groups,main="Unweighted GUniFrac No Prune\nprincipal coordinates analysis",xlab=paste("First Component", round(gUnweighted.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(gUnweighted.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
+legend(0.06,-0.1,levels(taxonomyGroups),col=palette(),pch=19,xpd=TRUE)
 plot(gWeighted.pcoa$vectors[,1],gWeighted.pcoa$vectors[,2], col=groups,main="Weighted GUniFrac No Prune\nprincipal coordinates analysis",xlab=paste("First Component", round(gWeighted.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(gWeighted.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
 plot(gInformation.pcoa$vectors[,1],gInformation.pcoa$vectors[,2], col=groups,main="Information GUniFrac No Prune\nprincipal coordinates analysis",xlab=paste("First Component", round(gInformation.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(gInformation.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)
 # plot(rUnweighted.pcoa$vectors[,1],rUnweighted.pcoa$vectors[,2], col=groups,main="Unweighted RuthiFrac\nprincipal coordinates analysis",xlab=paste("First Component", round(rUnweighted.varEx[1],digits=3),"variance explained"),ylab=paste("Second Component", round(rUnweighted.varEx[2],digits=3),"variance explained"),pch=19,cex.lab=1.4,cex.main=2)

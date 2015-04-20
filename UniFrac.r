@@ -8,6 +8,9 @@ library(ape)
 #pruneTree option prunes the tree for each comparison to exclude branch lengths not present in both samples
 #normalize divides the value at each node by sum of weights to guarantee output between 0 and 1 (breaks the triangle inequality)
 
+#otuTable must have samples as rows, OTUs as columns
+#tree must be phylo tree object from ape package (can use read.tree method to read in a newick tree to this format)
+
 getDistanceMatrix <- function(otuTable,tree,method="weighted",verbose=FALSE,pruneTree=FALSE,normalize=TRUE)  {
 
 	if (length(which(is.na(otuTable))) > 0) {
